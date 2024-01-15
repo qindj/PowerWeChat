@@ -299,33 +299,25 @@ func (serverGuard *ServerGuard) OverrideGetToken() {
 
 func (serverGuard *ServerGuard) buildResponse(request *http.Request, to string, from string, message interface{}) string {
 	var toMessage contract.MessageInterface
-	switch message.(type) {
+	switch message := message.(type) {
 	case nil:
 		return SUCCESS_EMPTY_RESPONSE
 
 	case string:
-		strMessage := message.(string)
-		if SUCCESS_EMPTY_RESPONSE == strMessage {
+		if SUCCESS_EMPTY_RESPONSE == message {
 			return SUCCESS_EMPTY_RESPONSE
 		} else {
-			toMessage = messages.NewText(message.(string))
+			toMessage = messages.NewText(message)
 			break
 		}
 	case int:
-		toMessage = messages.NewText(strconv.Itoa(message.(int)))
-		break
-
+		toMessage = messages.NewText(strconv.Itoa(message))
 	case messages.Raw:
-		return message.(messages.Raw).Get("content", SUCCESS_EMPTY_RESPONSE).(string)
-
-	case object.HashMap:
-		toMessage = messages.NewNews(message.([]*object.HashMap))
-		break
-	case *object.HashMap:
-		toMessage = messages.NewNews(message.([]*object.HashMap))
-		break
+		return message.Get("content", SUCCESS_EMPTY_RESPONSE).(string)
+	case []*object.HashMap:
+		toMessage = messages.NewNews(message)
 	case contract.MessageInterface:
-		toMessage = message.(contract.MessageInterface)
+		toMessage = message
 	default:
 
 	}
