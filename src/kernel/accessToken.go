@@ -46,6 +46,7 @@ type AccessToken struct {
 func NewAccessToken(app ApplicationInterface) (*AccessToken, error) {
 	config := (app).GetConfig()
 	baseURI := config.GetString("http.base_uri", "/")
+	proxyURI := config.GetString("http.proxy_uri", "")
 
 	var cacheClient cache.CacheInterface = nil
 	c := config.Get("cache", nil)
@@ -55,6 +56,9 @@ func NewAccessToken(app ApplicationInterface) (*AccessToken, error) {
 
 	h, err := helper.NewRequestHelper(&helper.Config{
 		BaseUrl: baseURI,
+		ClientConfig: &contract3.ClientConfig{
+			ProxyURI: proxyURI,
+		},
 	})
 	if err != nil {
 		return nil, err

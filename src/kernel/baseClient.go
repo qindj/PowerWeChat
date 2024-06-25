@@ -3,7 +3,6 @@ package kernel
 import (
 	"bytes"
 	"context"
-	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -474,7 +473,7 @@ func (client *BaseClient) OverrideGetMiddlewareOfRefreshAccessToken() {
 				}
 
 				if response.StatusCode != http.StatusOK {
-					return response, errors.New(fmt.Sprintf("http response code:%d", response.StatusCode))
+					return response, fmt.Errorf("http response code:%d", response.StatusCode)
 				}
 
 				rs, err := client.CheckTokenNeedRefresh(request, response, retry)
@@ -530,6 +529,9 @@ func (client *BaseClient) CheckTokenNeedRefresh(req *http.Request, rs *http.Resp
 			// clone 一个request
 			client.Logger.WithContext(ctx).InfoF("refresh token, retry:%d", retry)
 			token, err := client.Token.GetToken(ctx, false)
+			if err != nil {
+				return nil, err
+			}
 			q := req.URL.Query()
 			q.Set(client.Token.TokenKey, token.AccessToken)
 			req.URL.RawQuery = q.Encode()
