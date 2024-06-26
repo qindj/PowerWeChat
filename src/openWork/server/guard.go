@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/xml"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
 
@@ -271,7 +272,8 @@ func (guard *Guard) parseMessage(content string, callback interface{}) (err erro
 
 func (guard *Guard) OverrideToCallbackType() {
 	guard.ToCallbackType = func(callbackHeader contract.EventInterface, buf []byte) (decryptMessage interface{}, err error) {
-		switch callbackHeader.GetMsgType() {
+		msgType := callbackHeader.GetMsgType()
+		switch msgType {
 
 		// msg type is message
 		case kernelModels.CALLBACK_MSG_TYPE_TEXT:
@@ -316,7 +318,7 @@ func (guard *Guard) OverrideToCallbackType() {
 			return decryptMessage, err
 
 		default:
-			return nil, errors.New("not found wechat msg type")
+			return nil, fmt.Errorf("not found wechat msg type:%s", msgType)
 		}
 
 		return decryptMessage, err
