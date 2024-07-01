@@ -286,38 +286,26 @@ func (guard *Guard) OverrideToCallbackType() {
 			decryptMsg := workModels.MessageText{}
 			err = xml.Unmarshal(buf, &decryptMsg)
 			decryptMessage = decryptMsg
-			break
-
 		case kernelModels.CALLBACK_MSG_TYPE_IMAGE:
 			decryptMsg := workModels.MessageImage{}
 			err = xml.Unmarshal(buf, &decryptMsg)
 			decryptMessage = decryptMsg
-			break
-
 		case kernelModels.CALLBACK_MSG_TYPE_VOICE:
 			decryptMsg := workModels.MessageVoice{}
 			err = xml.Unmarshal(buf, &decryptMsg)
 			decryptMessage = decryptMsg
-			break
-
 		case kernelModels.CALLBACK_MSG_TYPE_VIDEO:
 			decryptMsg := workModels.MessageVideo{}
 			err = xml.Unmarshal(buf, &decryptMsg)
 			decryptMessage = decryptMsg
-			break
-
 		case kernelModels.CALLBACK_MSG_TYPE_LOCATION:
 			decryptMsg := workModels.MessageLocation{}
 			err = xml.Unmarshal(buf, &decryptMsg)
 			decryptMessage = decryptMsg
-			break
-
 		case kernelModels.CALLBACK_MSG_TYPE_LINK:
 			decryptMsg := workModels.MessageLink{}
 			err = xml.Unmarshal(buf, &decryptMsg)
 			decryptMessage = decryptMsg
-			break
-
 		// msg type is event
 		case kernelModels.CALLBACK_MSG_TYPE_EVENT:
 			decryptMessage, err = guard.toCallbackEvent(callbackHeader, buf)
@@ -342,7 +330,6 @@ func (guard *Guard) toCallbackEvent(callbackHeader contract.EventInterface, buf 
 		workModels.CALLBACK_EVENT_CHANGE_EXTERNAL_CONTACT,
 		workModels.CALLBACK_EVENT_CHANGE_CONTACT:
 		decryptMessage, err = guard.toCallbackEventChangeType(callbackHeader, buf)
-
 	// event is change external chat
 	case workModels.CALLBACK_EVENT_CHANGE_EXTERNAL_CHAT:
 		switch callbackHeader.GetChangeType() {
@@ -350,19 +337,15 @@ func (guard *Guard) toCallbackEvent(callbackHeader contract.EventInterface, buf 
 			decryptMsg := &workModels.EventExternalChatCreate{}
 			err = xml.Unmarshal(buf, decryptMsg)
 			decryptMessage = decryptMsg
-			break
 		case workModels.CALLBACK_EVENT_CHANGE_TYPE_UPDATE:
 			decryptMsg := &workModels.EventExternalChatUpdate{}
 			err = xml.Unmarshal(buf, decryptMsg)
 			decryptMessage = decryptMsg
-			break
 		case workModels.CALLBACK_EVENT_CHANGE_TYPE_DISMISS:
 			decryptMsg := &workModels.EventExternalChatDismiss{}
 			err = xml.Unmarshal(buf, decryptMsg)
 			decryptMessage = decryptMsg
-			break
 		}
-		break
 
 	// event is change external tag
 	case workModels.CALLBACK_EVENT_CHANGE_EXTERNAL_TAG:
@@ -371,132 +354,93 @@ func (guard *Guard) toCallbackEvent(callbackHeader contract.EventInterface, buf 
 			decryptMsg := &workModels.EventExternalUserTagCreate{}
 			err = xml.Unmarshal(buf, decryptMsg)
 			decryptMessage = decryptMsg
-			break
 		case workModels.CALLBACK_EVENT_CHANGE_TYPE_UPDATE:
 			decryptMsg := &workModels.EventExternalUserTagUpdate{}
 			err = xml.Unmarshal(buf, decryptMsg)
 			decryptMessage = decryptMsg
-			break
 		case workModels.CALLBACK_EVENT_CHANGE_TYPE_DELETE:
 			decryptMsg := &workModels.EventExternalUserTagDelete{}
 			err = xml.Unmarshal(buf, decryptMsg)
 			decryptMessage = decryptMsg
-			break
 		case workModels.CALLBACK_EVENT_CHANGE_TYPE_SHUFFLE:
 			decryptMsg := &workModels.EventExternalUserTagDelete{}
 			err = xml.Unmarshal(buf, decryptMsg)
 			decryptMessage = decryptMsg
-			break
 		}
-		break
 
 	// events
 	case workModels.CALLBACK_EVENT_SUBSCRIBE:
 		decryptMsg := &workModels.EventSubscribe{}
 		err = xml.Unmarshal(buf, decryptMsg)
 		decryptMessage = decryptMsg
-		break
 	case workModels.CALLBACK_EVENT_UNSUBSCRIBE:
 		decryptMsg := &workModels.EventSubscribe{}
 		err = xml.Unmarshal(buf, decryptMsg)
 		decryptMessage = decryptMsg
-		break
 	case workModels.CALLBACK_EVENT_ENTER_AGENT:
 		decryptMsg := &workModels.EventEnterAgent{}
 		err = xml.Unmarshal(buf, decryptMsg)
 		decryptMessage = decryptMsg
-		break
-
 	case workModels.CALLBACK_EVENT_LOCATION:
 		decryptMsg := &workModels.EventLocation{}
 		err = xml.Unmarshal(buf, decryptMsg)
 		decryptMessage = decryptMsg
-		break
-
 	case workModels.CALLBACK_EVENT_BATCH_JOB_RESULT:
 		decryptMsg := &workModels.EventBatchJobResult{}
 		err = xml.Unmarshal(buf, decryptMsg)
 		decryptMessage = decryptMsg
-		break
-
 	case workModels.CALLBACK_EVENT_CLICK:
 		decryptMsg := &workModels.EventClick{}
 		err = xml.Unmarshal(buf, decryptMsg)
 		decryptMessage = decryptMsg
-		break
-
 	case workModels.CALLBACK_EVENT_VIEW:
 		decryptMsg := &workModels.EventView{}
 		err = xml.Unmarshal(buf, decryptMsg)
 		decryptMessage = decryptMsg
-		break
-
 	case workModels.CALLBACK_EVENT_SCANCODE_PUSH:
 		decryptMsg := &workModels.EventScanCodePush{}
 		err = xml.Unmarshal(buf, decryptMsg)
 		decryptMessage = decryptMsg
-		break
-
 	case workModels.CALLBACK_EVENT_SCANCODE_WAITMSG:
 		decryptMsg := &workModels.EventScancodeWaitMsg{}
 		err = xml.Unmarshal(buf, decryptMsg)
 		decryptMessage = decryptMsg
-		break
-
 	case workModels.CALLBACK_EVENT_PIC_SYSPHOTO:
 		decryptMsg := &workModels.EventPicSysPhoto{}
 		err = xml.Unmarshal(buf, decryptMsg)
 		decryptMessage = decryptMsg
-		break
-
 	case workModels.CALLBACK_EVENT_PIC_PHOTO_OR_ALBUM:
 		decryptMsg := &workModels.EventPicPhotoOrAlbum{}
 		err = xml.Unmarshal(buf, decryptMsg)
 		decryptMessage = decryptMsg
-		break
-
 	case workModels.CALLBACK_EVENT_PIC_WEIXIN:
 		decryptMsg := &workModels.EventPicWeixin{}
 		err = xml.Unmarshal(buf, decryptMsg)
 		decryptMessage = decryptMsg
-		break
-
 	case workModels.CALLBACK_EVENT_LOCATION_SELECT:
 		decryptMsg := &workModels.EventLocationSelect{}
 		err = xml.Unmarshal(buf, decryptMsg)
 		decryptMessage = decryptMsg
-		break
-
 	case workModels.CALLBACK_EVENT_OPEN_APPROVAL_CHANGE:
 		decryptMsg := &workModels.EventOpenApprovalChange{}
 		err = xml.Unmarshal(buf, decryptMsg)
 		decryptMessage = decryptMsg
-		break
-
 	case workModels.CALLBACK_EVENT_SHARE_AGENT_CHANGE:
 		decryptMsg := &workModels.EventShareAgentChange{}
 		err = xml.Unmarshal(buf, decryptMsg)
 		decryptMessage = decryptMsg
-		break
-
 	case workModels.CALLBACK_EVENT_TEMPLATE_CARD_MENU_EVENT:
 		decryptMsg := &workModels.EventTemplateCardMenuEvent{}
 		err = xml.Unmarshal(buf, decryptMsg)
 		decryptMessage = decryptMsg
-		break
-
 	case workModels.CALLBACK_EVENT_LIVING_STATUS_CHANGE:
 		decryptMsg := &workModels.EventLivingStatusChange{}
 		err = xml.Unmarshal(buf, decryptMsg)
 		decryptMessage = decryptMsg
-		break
-
 	case workModels.CALLBACK_EVENT_MSGAUDIT_NOTIFY, workModels.CALLBACK_EVENT_UNLICENSED_NOTIFY:
 		decryptMsg := &workModels.EventMsgAuditNotify{}
 		err = xml.Unmarshal(buf, decryptMsg)
 		decryptMessage = decryptMsg
-		break
-
 	default:
 		return nil, fmt.Errorf("not found wecom event: %s", eventType)
 	}
@@ -513,96 +457,75 @@ func (guard *Guard) toCallbackEventChangeType(callbackHeader contract.EventInter
 		decryptMsg := &workModels.EventCustomerAcquisitionOpenProfile{}
 		err = xml.Unmarshal(buf, decryptMsg)
 		decryptMessage = decryptMsg
-		break
-
 	case workModels.CALLBACK_EVENT_CHANGE_TYPE_FRIEND_REQUEST:
 		decryptMsg := &workModels.EventCustomerAcquisitionFriendRequest{}
 		err = xml.Unmarshal(buf, decryptMsg)
 		decryptMessage = decryptMsg
-		break
-
 	// change type is for user event
 	case workModels.CALLBACK_EVENT_CHANGE_TYPE_CREATE_USER:
 		decryptMsg := &workModels.EventUserCreate{}
 		err = xml.Unmarshal(buf, decryptMsg)
 		decryptMessage = decryptMsg
-		break
-
 	case workModels.CALLBACK_EVENT_CHANGE_TYPE_UPDATE_USER:
 		decryptMsg := &workModels.EventUserUpdate{}
 		err = xml.Unmarshal(buf, decryptMsg)
 		decryptMessage = decryptMsg
-		break
-
 	case workModels.CALLBACK_EVENT_CHANGE_TYPE_DELETE_USER:
 		decryptMsg := &workModels.EventUserDelete{}
 		err = xml.Unmarshal(buf, decryptMsg)
 		decryptMessage = decryptMsg
-		break
-
 	// change type is for party event
 	case workModels.CALLBACK_EVENT_CHANGE_TYPE_CREATE_PARTY:
 		decryptMsg := &workModels.EventPartyCreate{}
 		err = xml.Unmarshal(buf, decryptMsg)
 		decryptMessage = decryptMsg
-		break
-
 	case workModels.CALLBACK_EVENT_CHANGE_TYPE_UPDATE_PARTY:
 		decryptMsg := &workModels.EventPartyUpdate{}
 		err = xml.Unmarshal(buf, decryptMsg)
 		decryptMessage = decryptMsg
-		break
-
 	case workModels.CALLBACK_EVENT_CHANGE_TYPE_DELETE_PARTY:
 		decryptMsg := &workModels.EventPartyDelete{}
 		err = xml.Unmarshal(buf, decryptMsg)
 		decryptMessage = decryptMsg
-		break
-
 	// change type is for external contact event
 	case workModels.CALLBACK_EVENT_CHANGE_TYPE_ADD_EXTERNAL_CONTACT:
 		decryptMsg := &workModels.EventExternalUserAdd{}
 		err = xml.Unmarshal(buf, decryptMsg)
 		decryptMessage = decryptMsg
-		break
-
 	case workModels.CALLBACK_EVENT_CHANGE_TYPE_EDIT_EXTERNAL_CONTACT:
 		decryptMsg := &workModels.EventExternalUserEdit{}
 		err = xml.Unmarshal(buf, decryptMsg)
 		decryptMessage = decryptMsg
-		break
-
 	case workModels.CALLBACK_EVENT_CHANGE_TYPE_ADD_HALF_EXTERNAL_CONTACT:
 		decryptMsg := &workModels.EventExternalUserAddHalf{}
 		err = xml.Unmarshal(buf, decryptMsg)
 		decryptMessage = decryptMsg
-		break
-
 	case workModels.CALLBACK_EVENT_CHANGE_TYPE_DEL_EXTERNAL_CONTACT:
 		decryptMsg := &workModels.EventExternalUserDel{}
 		err = xml.Unmarshal(buf, decryptMsg)
 		decryptMessage = decryptMsg
-		break
-
 	case workModels.CALLBACK_EVENT_CHANGE_TYPE_DEL_FOLLOW_USER:
 		decryptMsg := &workModels.EventExternalUserDelFollowUser{}
 		err = xml.Unmarshal(buf, decryptMsg)
 		decryptMessage = decryptMsg
-		break
-
 	case workModels.CALLBACK_EVENT_CHANGE_TYPE_TRANSFER_FAIL:
 		decryptMsg := &workModels.EventExternalTransferFail{}
 		err = xml.Unmarshal(buf, decryptMsg)
 		decryptMessage = decryptMsg
-		break
-
+	// change type for event external chat
+	case workModels.CALLBACK_EVENT_UPDATE_DETAIL_ADD_MEMBER, workModels.CALLBACK_EVENT_UPDATE_DETAIL_DEL_MEMBER, workModels.CALLBACK_EVENT_UPDATE_DETAIL_CHANGE_OWNER, workModels.CALLBACK_EVENT_UPDATE_DETAIL_CHANGE_NAME, workModels.CALLBACK_EVENT_UPDATE_DETAIL_CHANGE_NOTICE:
+		decryptMsg := &workModels.EventExternalChatUpdate{}
+		err = xml.Unmarshal(buf, decryptMsg)
+		decryptMessage = decryptMsg
+	case workModels.CALLBACK_EVENT_CHANGE_TYPE_DISMISS:
+		decryptMsg := &workModels.EventExternalChatDismiss{}
+		err = xml.Unmarshal(buf, decryptMsg)
+		decryptMessage = decryptMsg
 	// change type is for tag event
 	case workModels.CALLBACK_EVENT_CHANGE_TYPE_UPDATE_TAG:
 		decryptMsg := &workModels.EventTagUpdate{}
 		err = xml.Unmarshal(buf, decryptMsg)
 		decryptMessage = decryptMsg
-		break
-
 	default:
 		return nil, fmt.Errorf("not found wecom change event: %s, changeType: %s", callbackHeader.GetEvent(), changeType)
 	}
