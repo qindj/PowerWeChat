@@ -336,6 +336,26 @@ func (guard *Guard) toCallbackEvent(callbackHeader contract.EventInterface, buf 
 		workModels.CALLBACK_EVENT_CHANGE_EXTERNAL_CONTACT,
 		workModels.CALLBACK_EVENT_CHANGE_CONTACT:
 		decryptMessage, err = guard.toCallbackEventChangeType(callbackHeader, buf)
+
+	// event is change external chat
+	case workModels.CALLBACK_EVENT_CHANGE_EXTERNAL_CHAT:
+		switch callbackHeader.GetChangeType() {
+		case workModels.CALLBACK_EVENT_CHANGE_TYPE_CREATE:
+			decryptMsg := &workModels.EventExternalChatCreate{}
+			err = xml.Unmarshal(buf, decryptMsg)
+			decryptMessage = decryptMsg
+			break
+		case workModels.CALLBACK_EVENT_CHANGE_TYPE_UPDATE:
+			decryptMsg := &workModels.EventExternalChatUpdate{}
+			err = xml.Unmarshal(buf, decryptMsg)
+			decryptMessage = decryptMsg
+			break
+		case workModels.CALLBACK_EVENT_CHANGE_TYPE_DISMISS:
+			decryptMsg := &workModels.EventExternalChatDismiss{}
+			err = xml.Unmarshal(buf, decryptMsg)
+			decryptMessage = decryptMsg
+			break
+		}
 		break
 
 	// event is change external tag
@@ -566,18 +586,6 @@ func (guard *Guard) toCallbackEventChangeType(callbackHeader contract.EventInter
 		decryptMessage = decryptMsg
 		break
 
-	// change type for event external chat
-	case workModels.CALLBACK_EVENT_UPDATE_DETAIL_ADD_MEMBER, workModels.CALLBACK_EVENT_UPDATE_DETAIL_DEL_MEMBER, workModels.CALLBACK_EVENT_UPDATE_DETAIL_CHANGE_OWNER, workModels.CALLBACK_EVENT_UPDATE_DETAIL_CHANGE_NAME, workModels.CALLBACK_EVENT_UPDATE_DETAIL_CHANGE_NOTICE:
-		decryptMsg := &workModels.EventExternalChatUpdate{}
-		err = xml.Unmarshal(buf, decryptMsg)
-		decryptMessage = decryptMsg
-		break
-	case workModels.CALLBACK_EVENT_CHANGE_TYPE_DISMISS:
-		decryptMsg := &workModels.EventExternalChatDismiss{}
-		err = xml.Unmarshal(buf, decryptMsg)
-		decryptMessage = decryptMsg
-		break
-
 	// change type is for tag event
 	case workModels.CALLBACK_EVENT_CHANGE_TYPE_UPDATE_TAG:
 		decryptMsg := &workModels.EventTagUpdate{}
@@ -586,7 +594,7 @@ func (guard *Guard) toCallbackEventChangeType(callbackHeader contract.EventInter
 		break
 
 	default:
-		return nil, fmt.Errorf("not found wecom change event: %s", changeType)
+		return nil, fmt.Errorf("not found wecom change event: %s, changeType: %s", callbackHeader.GetEvent(), changeType)
 	}
 
 	return decryptMessage, err
