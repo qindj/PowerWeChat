@@ -390,6 +390,11 @@ func (guard *Guard) toCallbackEvent(callbackHeader contract.EventInterface, buf 
 		err = xml.Unmarshal(buf, decryptMsg)
 		decryptMessage = decryptMsg
 		break
+	case workModels.CALLBACK_EVENT_UNSUBSCRIBE:
+		decryptMsg := &workModels.EventSubscribe{}
+		err = xml.Unmarshal(buf, decryptMsg)
+		decryptMessage = decryptMsg
+		break
 
 	case workModels.CALLBACK_EVENT_ENTER_AGENT:
 		decryptMsg := &workModels.EventEnterAgent{}
