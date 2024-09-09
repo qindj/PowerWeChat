@@ -103,12 +103,18 @@ func NewGuard(app *kernel.ApplicationInterface) *Guard {
 
 // Override Validate
 func (guard *Guard) OverrideIsSafeMode() {
+	if guard.ServerGuard == nil {
+		return
+	}
 	guard.IsSafeMode = func(request *http.Request) bool {
 		return true
 	}
 }
 
 func (guard *Guard) Notify(request *http.Request, closure func(content *kernelModels.Callback, ev models.IEvent, callbackMsg interface{}) interface{}) (httpRS *http.Response, err error) {
+	if guard.ServerGuard == nil {
+		return nil, nil
+	}
 	// validate the signature
 	_, err = guard.Validate(request)
 	if err != nil {
