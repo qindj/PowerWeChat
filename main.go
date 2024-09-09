@@ -3,6 +3,9 @@ package main
 import (
 	"context"
 	"fmt"
+	"os"
+	"strconv"
+
 	fmt2 "github.com/ArtisanCloud/PowerLibs/v3/fmt"
 	"github.com/ArtisanCloud/PowerWeChat/v3/src/kernel"
 	"github.com/ArtisanCloud/PowerWeChat/v3/src/kernel/power"
@@ -14,8 +17,6 @@ import (
 	"github.com/ArtisanCloud/PowerWeChat/v3/src/work"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/sdk/trace"
-	"os"
-	"strconv"
 )
 
 func GetOfficialConfig() *officialAccount.UserConfig {
@@ -39,7 +40,6 @@ func GetOfficialConfig() *officialAccount.UserConfig {
 		HttpDebug: false,
 		Debug:     false,
 	}
-
 }
 
 func GetWorkConfig() *work.UserConfig {
@@ -67,7 +67,7 @@ func GetWorkConfig() *work.UserConfig {
 			DB:       1,
 		}),
 
-		//HttpDebug: true,
+		// HttpDebug: true,
 		Debug: true,
 
 		// server config
@@ -113,15 +113,14 @@ func GetPaymentConfig() *payment.UserConfig {
 		//"sandbox": true,
 
 		// server config
-		//Token:            os.Getenv("token"),
-		//AESKey:           os.Getenv("aes_key"),
+		// Token:            os.Getenv("token"),
+		// AESKey:           os.Getenv("aes_key"),
 
 	}
 }
 
 func GetMiniProgramConfig() *miniProgram.UserConfig {
 	return &miniProgram.UserConfig{
-
 		AppID:  os.Getenv("miniprogram_app_id"), // 小程序、公众号或者企业微信的appid
 		Secret: os.Getenv("miniprogram_secret"), // 商户号 appID
 
@@ -141,7 +140,6 @@ func GetMiniProgramConfig() *miniProgram.UserConfig {
 		//"sandbox": true,
 
 	}
-
 }
 
 func GetOpenPlatformConfig() *openPlatform.UserConfig {
@@ -161,11 +159,11 @@ func GetOpenPlatformConfig() *openPlatform.UserConfig {
 			Password: "",
 			DB:       1,
 		}),
-		//OAuth:        "",
-		//HttpDebug:    "",
-		//Debug:        "",
-		//NotifyURL:    "",
-		//Sandbox:      "",
+		// OAuth:        "",
+		// HttpDebug:    "",
+		// Debug:        "",
+		// NotifyURL:    "",
+		// Sandbox:      "",
 	}
 }
 
@@ -180,7 +178,6 @@ func init() {
 }
 
 func main() {
-
 	fmt.Printf("hello Wechat! \n")
 
 	tracer := otel.Tracer("example-tracer")
@@ -193,9 +190,9 @@ func main() {
 	if err != nil {
 		fmt.Println(err.Error())
 	}
-	//officialAccountApp.Logger.Info("custom info log")
-	//officialAccountApp.Logger.Error("custom error log")
-	//officialAccountApp.Logger.Warn("custom warn log")
+	// officialAccountApp.Logger.Info("custom info log")
+	// officialAccountApp.Logger.Error("custom error log")
+	// officialAccountApp.Logger.Warn("custom warn log")
 
 	officialAccountApp.TemplateMessage.Send(ctx, &request.RequestTemlateMessage{
 		ToUser:     "",
@@ -251,5 +248,4 @@ func main() {
 		fmt.Println(err.Error())
 	}
 	fmt2.Dump("openPlatform config:", openPlatform.GetConfig().All())
-
 }

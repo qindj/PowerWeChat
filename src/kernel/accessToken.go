@@ -207,7 +207,7 @@ func (accessToken *AccessToken) requestToken(ctx context.Context, credentials *o
 		token.AuthorizerRefreshToken == "" &&
 		token.SuiteAccessToken == "" &&
 		token.ProviderAccessToken == "") {
-		return nil, errors.New(fmt.Sprintf("Request access_token fail: %v", res))
+		return nil, fmt.Errorf("Request access_token fail: %v", res)
 	}
 
 	return token, nil
@@ -247,26 +247,24 @@ func (accessToken *AccessToken) sendRequest(ctx context.Context, credential *obj
 	df := accessToken.HttpHelper.Df().WithContext(ctx).Uri(strEndpoint).
 		Method(accessToken.RequestMethod)
 
-	// 检查是否需要有请求参数配置
-	if options != nil {
-		// set query key values
-		if (*options)["query"] != nil {
-			queries := (*options)["query"].(*object.StringMap)
-			if queries != nil {
-				for k, v := range *queries {
-					df.Query(k, v)
-				}
+		// 检查是否需要有请求参数配置
+	// set query key values
+	if (*options)["query"] != nil {
+		queries := (*options)["query"].(*object.StringMap)
+		if queries != nil {
+			for k, v := range *queries {
+				df.Query(k, v)
 			}
 		}
-
-		// set body json
-		if (*options)["json"] != nil {
-			df.Json((*options)["json"])
-		}
-		//if (*options)["form_params"] != nil {
-		//	df.Json((*options)["form_params"])
-		//}
 	}
+
+	// set body json
+	if (*options)["json"] != nil {
+		df.Json((*options)["json"])
+	}
+	//if (*options)["form_params"] != nil {
+	//	df.Json((*options)["form_params"])
+	//}
 
 	rs, err := df.Request()
 	if err != nil {
