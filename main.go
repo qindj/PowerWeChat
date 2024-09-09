@@ -190,9 +190,6 @@ func main() {
 	if err != nil {
 		fmt.Println(err.Error())
 	}
-	// officialAccountApp.Logger.Info("custom info log")
-	// officialAccountApp.Logger.Error("custom error log")
-	// officialAccountApp.Logger.Warn("custom warn log")
 
 	officialAccountApp.TemplateMessage.Send(ctx, &request.RequestTemlateMessage{
 		ToUser:     "",
