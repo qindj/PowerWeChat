@@ -13,6 +13,9 @@ import (
 	request2 "github.com/ArtisanCloud/PowerWeChat/v3/src/kernel/request"
 	response2 "github.com/ArtisanCloud/PowerWeChat/v3/src/kernel/response"
 
+	request2 "github.com/ArtisanCloud/PowerWeChat/v3/src/kernel/request"
+	response2 "github.com/ArtisanCloud/PowerWeChat/v3/src/kernel/response"
+
 	"github.com/ArtisanCloud/PowerLibs/v3/http/contract"
 	"github.com/ArtisanCloud/PowerLibs/v3/http/helper"
 	contract2 "github.com/ArtisanCloud/PowerLibs/v3/logger/contract"
@@ -492,6 +495,8 @@ func (client *BaseClient) OverrideGetMiddlewareOfRefreshAccessToken() {
 }
 
 func (client *BaseClient) CheckTokenNeedRefresh(req *http.Request, rs *http.Response, retry int) (*http.Response, error) {
+	ctx := req.Context()
+
 	ctx := req.Context()
 
 	// 如何微信返回的是二进制数据流，那么就无须判断返回的err code是否正常
