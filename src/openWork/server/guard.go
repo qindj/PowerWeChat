@@ -486,7 +486,7 @@ func (guard *Guard) toCallbackEvent(callbackHeader contract.EventInterface, buf 
 		decryptMessage = decryptMsg
 		break
 
-	case workModels.CALLBACK_EVENT_MSGAUDIT_NOTIFY:
+	case workModels.CALLBACK_EVENT_MSGAUDIT_NOTIFY, workModels.CALLBACK_EVENT_UNLICENSED_NOTIFY:
 		decryptMsg := &workModels.EventMsgAuditNotify{}
 		err = xml.Unmarshal(buf, decryptMsg)
 		decryptMessage = decryptMsg
