@@ -521,36 +521,6 @@ func (guard *Guard) toCallbackEventChangeType(callbackHeader contract.EventInter
 		decryptMessage = decryptMsg
 		break
 
-	case workModels.CALLBACK_EVENT_CHANGE_TYPE_OPEN_PROFILE:
-		decryptMsg := &workModels.EventCustomerAcquisitionOpenProfile{}
-		err = xml.Unmarshal(buf, decryptMsg)
-		decryptMessage = decryptMsg
-		break
-
-	case workModels.CALLBACK_EVENT_CHANGE_TYPE_FRIEND_REQUEST:
-		decryptMsg := &workModels.EventCustomerAcquisitionFriendRequest{}
-		err = xml.Unmarshal(buf, decryptMsg)
-		decryptMessage = decryptMsg
-		break
-
-	case workModels.CALLBACK_EVENT_CHANGE_TYPE_ADD_EXTERNAL_CONTACT:
-		decryptMsg := &workModels.EventExternalUserAdd{}
-		err = xml.Unmarshal(buf, decryptMsg)
-		decryptMessage = decryptMsg
-		break
-
-	case workModels.CALLBACK_EVENT_CHANGE_TYPE_ADD_HALF_EXTERNAL_CONTACT:
-		decryptMsg := &workModels.EventExternalUserAddHalf{}
-		err = xml.Unmarshal(buf, decryptMsg)
-		decryptMessage = decryptMsg
-		break
-
-	case workModels.CALLBACK_EVENT_CHANGE_TYPE_DEL_EXTERNAL_CONTACT:
-		decryptMsg := &workModels.EventExternalUserEdit{}
-		err = xml.Unmarshal(buf, decryptMsg)
-		decryptMessage = decryptMsg
-		break
-
 	// change type is for user event
 	case workModels.CALLBACK_EVENT_CHANGE_TYPE_CREATE_USER:
 		decryptMsg := &workModels.EventUserCreate{}
@@ -647,42 +617,14 @@ func (guard *Guard) toCallbackChatEventChangeType(callbackHeader contract.EventI
 		decryptMsg := &workModels.EventExternalChatCreate{}
 		err = xml.Unmarshal(buf, decryptMsg)
 		decryptMessage = decryptMsg
-		break
 	case workModels.CALLBACK_EVENT_CHANGE_TYPE_UPDATE:
 		decryptMsg := &workModels.EventExternalChatUpdate{}
 		err = xml.Unmarshal(buf, decryptMsg)
 		decryptMessage = decryptMsg
-		break
 	case workModels.CALLBACK_EVENT_CHANGE_TYPE_DISMISS:
 		decryptMsg := &workModels.EventExternalChatDismiss{}
 		err = xml.Unmarshal(buf, decryptMsg)
 		decryptMessage = decryptMsg
-		break
-	default:
-		return nil, errors.New("not found wechat event")
-	}
-
-	return decryptMessage, err
-}
-
-// switch chat event change type
-func (guard *Guard) toCallbackChatEventChangeType(callbackHeader contract.EventInterface, buf []byte) (decryptMessage interface{}, err error) {
-	switch callbackHeader.GetChangeType() {
-	case workModels.CALLBACK_EVENT_CHANGE_TYPE_CREATE:
-		decryptMsg := &workModels.EventExternalChatCreate{}
-		err = xml.Unmarshal(buf, decryptMsg)
-		decryptMessage = decryptMsg
-		break
-	case workModels.CALLBACK_EVENT_CHANGE_TYPE_UPDATE:
-		decryptMsg := &workModels.EventExternalChatUpdate{}
-		err = xml.Unmarshal(buf, decryptMsg)
-		decryptMessage = decryptMsg
-		break
-	case workModels.CALLBACK_EVENT_CHANGE_TYPE_DISMISS:
-		decryptMsg := &workModels.EventExternalChatDismiss{}
-		err = xml.Unmarshal(buf, decryptMsg)
-		decryptMessage = decryptMsg
-		break
 	default:
 		return nil, errors.New("not found wechat event")
 	}
