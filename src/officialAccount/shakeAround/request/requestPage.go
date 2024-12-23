@@ -9,9 +9,7 @@ type RequestPageInfo struct {
 }
 
 type RequestPageUpdate struct {
-
 	*RequestPageInfo
 
-	PageID       int `json:"page_id"`
-
+	PageID int `json:"page_id"`
 }

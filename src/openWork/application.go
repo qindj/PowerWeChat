@@ -158,7 +158,6 @@ func (app *OpenWork) GetConfig() *kernel.Config {
 }
 
 func (app *OpenWork) GetComponent(name string) interface{} {
-
 	switch name {
 	case "User":
 		return app.User
@@ -180,11 +179,9 @@ func (app *OpenWork) GetComponent(name string) interface{} {
 	default:
 		return nil
 	}
-
 }
 
 func MapUserConfig(userConfig *UserConfig) (*object.HashMap, error) {
-
 	baseURI := "https://qyapi.weixin.qq.com/"
 	if userConfig.Http.BaseURI != "" {
 		baseURI = userConfig.Http.BaseURI
@@ -194,7 +191,6 @@ func MapUserConfig(userConfig *UserConfig) (*object.HashMap, error) {
 		timeout = userConfig.Http.Timeout
 	}
 	config := &object.HashMap{
-
 		"app_id":          userConfig.AppID,
 		"secret":          userConfig.Secret,
 		"auth_code":       userConfig.AuthCode,

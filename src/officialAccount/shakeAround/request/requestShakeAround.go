@@ -9,9 +9,7 @@ type RequestShakeAroundAccountRegister struct {
 	ApplyReason           string   `json:"apply_reason"`
 }
 
-
 // ---------------------------------------------------------
-
 
 type RequestShakeAroundUser struct {
 	Ticket  string `json:"ticket"`

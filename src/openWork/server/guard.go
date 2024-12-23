@@ -86,7 +86,7 @@ type Guard struct {
 }
 
 func NewGuard(app *kernel.ApplicationInterface) *Guard {
-	//config := (*app).GetContainer().GetConfig()
+	// config := (*app).GetContainer().GetConfig()
 
 	guard := &Guard{
 		kernel.NewServerGuard(app),
@@ -98,7 +98,6 @@ func NewGuard(app *kernel.ApplicationInterface) *Guard {
 	guard.OverrideToCallbackType()
 
 	return guard
-
 }
 
 // Override Validate
@@ -185,11 +184,9 @@ func (guard *Guard) Notify(request *http.Request, closure func(content *kernelMo
 	}
 
 	return httpRS, err
-
 }
 
 func (guard *Guard) DecryptEvent(content string) (bufDecrypted []byte, err error) {
-
 	encryptor := (*guard.App).GetComponent("Encryptor").(*kernel.Encryptor)
 
 	bufDecrypted, cryptErr := encryptor.DecryptContent(content)
@@ -198,7 +195,6 @@ func (guard *Guard) DecryptEvent(content string) (bufDecrypted []byte, err error
 	}
 
 	return bufDecrypted, err
-
 }
 
 // Override Validate
@@ -221,16 +217,14 @@ func (guard *Guard) OverrideResolve() {
 }
 
 func (guard *Guard) registerHandlers() {
-
 	// guard.On(EVENT_AUTHORIZED, handlers.NewAuthorized(guard.App))
 	// guard.On(EVENT_UNAUTHORIZED, handlers.NewUnauthorized(guard.App))
 	// guard.On(EVENT_UPDATE_AUTHORIZED, handlers.NewUpdateAuthorized(guard.App))
 	guard.On(EVENT_SUITE_TICKET, handlers.NewSuiteTicket(guard.App))
-
 }
 
 func (guard *Guard) GetMessage(request *http.Request) (ev models.IEvent, msg interface{}, err error) {
-	var b = []byte("")
+	b := []byte("")
 	if request.Body != http.NoBody {
 		b, err = io.ReadAll(request.Body)
 		if err != nil || b == nil {
@@ -256,7 +250,6 @@ func (guard *Guard) GetMessage(request *http.Request) (ev models.IEvent, msg int
 }
 
 func (guard *Guard) parseMessage(content string, callback interface{}) (err error) {
-
 	if len(content) == 0 {
 		return errors.New("empty content")
 	}
@@ -277,7 +270,6 @@ func (guard *Guard) parseMessage(content string, callback interface{}) (err erro
 }
 
 func (guard *Guard) OverrideToCallbackType() {
-
 	guard.ToCallbackType = func(callbackHeader contract.EventInterface, buf []byte) (decryptMessage interface{}, err error) {
 		switch callbackHeader.GetMsgType() {
 
@@ -329,12 +321,10 @@ func (guard *Guard) OverrideToCallbackType() {
 
 		return decryptMessage, err
 	}
-
 }
 
 // switch event
 func (guard *Guard) toCallbackEvent(callbackHeader contract.EventInterface, buf []byte) (decryptMessage interface{}, err error) {
-
 	switch callbackHeader.GetEvent() {
 
 	// event is change contact
@@ -459,7 +449,6 @@ func (guard *Guard) toCallbackEvent(callbackHeader contract.EventInterface, buf 
 
 // switch event change type
 func (guard *Guard) toCallbackEventChangeType(callbackHeader contract.EventInterface, buf []byte) (decryptMessage interface{}, err error) {
-
 	switch callbackHeader.GetChangeType() {
 
 	case workModels.CALLBACK_EVENT_CHANGE_TYPE_OPEN_PROFILE:
@@ -552,7 +541,6 @@ func (guard *Guard) toCallbackEventChangeType(callbackHeader contract.EventInter
 
 // switch chat event change type
 func (guard *Guard) toCallbackChatEventChangeType(callbackHeader contract.EventInterface, buf []byte) (decryptMessage interface{}, err error) {
-
 	switch callbackHeader.GetChangeType() {
 	case workModels.CALLBACK_EVENT_CHANGE_TYPE_CREATE:
 		decryptMsg := &workModels.EventExternalChatCreate{}

@@ -30,7 +30,6 @@ func NewClient(app kernel.ApplicationInterface) (*Client, error) {
 // 获取配置了客户联系功能的成员列表.
 // https://developer.work.weixin.qq.com/document/path/92571
 func (comp *Client) GetFollowUsers(ctx context.Context) (*response.ResponseGetFollowUserList, error) {
-
 	result := &response.ResponseGetFollowUserList{}
 
 	_, err := comp.BaseClient.HttpGet(ctx, "cgi-bin/externalcontact/get_follow_user_list", nil, nil, result)
@@ -41,7 +40,6 @@ func (comp *Client) GetFollowUsers(ctx context.Context) (*response.ResponseGetFo
 // 获取外部联系人列表.
 // https://developer.work.weixin.qq.com/document/path/92113
 func (comp *Client) List(ctx context.Context, userID string) (*response.ResponseGetList, error) {
-
 	result := &response.ResponseGetList{}
 
 	_, err := comp.BaseClient.HttpGet(ctx, "cgi-bin/externalcontact/list", &object.StringMap{
@@ -54,7 +52,6 @@ func (comp *Client) List(ctx context.Context, userID string) (*response.Response
 // 获取外部联系人详情.
 // https://developer.work.weixin.qq.com/document/path/92114
 func (comp *Client) Get(ctx context.Context, externalUserID string, cursor string) (*weCom.ResponseGetExternalContact, error) {
-
 	result := &weCom.ResponseGetExternalContact{}
 
 	_, err := comp.BaseClient.HttpGet(ctx, "cgi-bin/externalcontact/get", &object.StringMap{
@@ -68,7 +65,6 @@ func (comp *Client) Get(ctx context.Context, externalUserID string, cursor strin
 // 批量获取客户详情.
 // https://developer.work.weixin.qq.com/document/path/92994
 func (comp *Client) BatchGet(ctx context.Context, userID []string, cursor string, limit int) (*response.ResponseBatchGetByUser, error) {
-
 	result := &response.ResponseBatchGetByUser{}
 
 	options := &object.HashMap{
@@ -85,7 +81,6 @@ func (comp *Client) BatchGet(ctx context.Context, userID []string, cursor string
 // 修改客户备注信息.
 // https://developer.work.weixin.qq.com/document/path/92115
 func (comp *Client) Remark(ctx context.Context, data *request.RequestExternalContactRemark) (*response2.ResponseWork, error) {
-
 	result := &response2.ResponseWork{}
 
 	_, err := comp.BaseClient.HttpPostJson(ctx, "cgi-bin/externalcontact/remark", data, nil, nil, result)
@@ -96,7 +91,6 @@ func (comp *Client) Remark(ctx context.Context, data *request.RequestExternalCon
 // 获取待分配的离职成员列表
 // https://developer.work.weixin.qq.com/document/path/92124
 func (comp *Client) GetUnassigned(ctx context.Context, pageID int, pageSize int) (*response.ResponseGetUnassignedList, error) {
-
 	result := &response.ResponseGetUnassignedList{}
 
 	_, err := comp.BaseClient.HttpPostJson(ctx, "cgi-bin/externalcontact/get_unassigned_list", &object.HashMap{
@@ -110,7 +104,6 @@ func (comp *Client) GetUnassigned(ctx context.Context, pageID int, pageSize int)
 // 分配离职成员的客户
 // https://developer.work.weixin.qq.com/document/path/94081
 func (comp *Client) Transfer(ctx context.Context, externalUserID []string, handoverUserID string, takeoverUserID string) (*response.ResponseGetTransferedCustomerList, error) {
-
 	result := &response.ResponseGetTransferedCustomerList{}
 
 	_, err := comp.BaseClient.HttpPostJson(ctx, "cgi-bin/externalcontact/transfer_customer", &object.HashMap{
@@ -125,7 +118,6 @@ func (comp *Client) Transfer(ctx context.Context, externalUserID []string, hando
 // 分配离职成员的客户群
 // https://developer.work.weixin.qq.com/document/path/92127
 func (comp *Client) TransferGroupChat(ctx context.Context, chatIDs []string, newOwner string) (*response3.ResponseGroupChatTransfer, error) {
-
 	result := &response3.ResponseGroupChatTransfer{}
 
 	_, err := comp.BaseClient.HttpPostJson(ctx, "cgi-bin/externalcontact/groupchat/transfer", &object.HashMap{
@@ -139,7 +131,6 @@ func (comp *Client) TransferGroupChat(ctx context.Context, chatIDs []string, new
 // 查询客户接替结果.
 // https://developer.work.weixin.qq.com/document/path/94082
 func (comp *Client) GetResignedTransferResult(ctx context.Context, handoverUserID string, takeoverUserID string, cursor string) (*response.ResponseGetTransferedCustomerList, error) {
-
 	result := &response.ResponseGetTransferedCustomerList{}
 
 	_, err := comp.BaseClient.HttpPostJson(ctx, "cgi-bin/externalcontact/resigned/transfer_result?", &object.StringMap{
@@ -154,7 +145,6 @@ func (comp *Client) GetResignedTransferResult(ctx context.Context, handoverUserI
 // 企业主体unionid转换为第三方external_userid
 // https://developer.work.weixin.qq.com/document/path/93274
 func (comp *Client) UnionIDToExternalUserID(ctx context.Context, unionID string, openID string) (string, error) {
-
 	var result struct {
 		response2.ResponseWork
 		// ExternalUserID 该企业的外部联系人ID
@@ -172,7 +162,6 @@ func (comp *Client) UnionIDToExternalUserID(ctx context.Context, unionID string,
 // 转换客户external_userid
 // https://developer.work.weixin.qq.com/document/path/97063#%E8%BD%AC%E6%8D%A2%E5%AE%A2%E6%88%B7external-userid
 func (comp *Client) GetNewExternalUserID(ctx context.Context, externalUserIDList []string) ([]response.NewExternalUserID, error) {
-
 	result := new(response.ResponseGetNewExternalUserID)
 	req := object.HashMap{
 		"external_userid_list": externalUserIDList,
@@ -186,7 +175,6 @@ func (comp *Client) GetNewExternalUserID(ctx context.Context, externalUserIDList
 // external_userid转换
 // https://developer.work.weixin.qq.com/document/path/95884#external-userid%E8%BD%AC%E6%8D%A2
 func (comp *Client) FromServiceExternalUserID(ctx context.Context, agentID int, externalUserID string) (string, error) {
-
 	result := new(struct {
 		response2.ResponseWork
 		ExternalUserID string `json:"external_userid,omitempty"`

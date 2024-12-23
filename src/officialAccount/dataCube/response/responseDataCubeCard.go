@@ -39,8 +39,6 @@ type ResponseDataCubeMemberCardSummary struct {
 	List []*MemberCardSummary `json:"list"`
 }
 
-
-
 // ----------------------------------------------------------------------
 
 type MemberCardSummaryByID struct {
@@ -68,8 +66,4 @@ type ResponseDataCubeMemberCardSummaryByID struct {
 
 // ----------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------
-

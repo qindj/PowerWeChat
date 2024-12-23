@@ -28,7 +28,6 @@ func NewClient(app kernel.ApplicationInterface) (*Client, error) {
 // 下单购买账号
 // https://developer.work.weixin.qq.com/document/path/95644
 func (clt *Client) CreateNewOrder(ctx context.Context, req *request.RequestCreateNewOrder) (string, error) {
-
 	var result struct {
 		kernelResponse.ResponseWork
 		OrderID string `json:"order_id,omitempty"`
@@ -57,7 +56,6 @@ func (clt *Client) CreateRenewOrderJob(ctx context.Context, req *request.Request
 // 提交续期订单
 // https://developer.work.weixin.qq.com/document/path/95646#%E6%8F%90%E4%BA%A4%E7%BB%AD%E6%9C%9F%E8%AE%A2%E5%8D%95
 func (clt *Client) SubmitOrderJob(ctx context.Context, req *request.RequestSubmitOrderJob) (string, error) {
-
 	var result struct {
 		kernelResponse.ResponseWork
 		OrderID string `json:"order_id,omitempty"`
@@ -104,10 +102,9 @@ func (clt *Client) GetOrder(ctx context.Context, orderID string) (*model.Order, 
 // 获取订单中的账号列表
 // https://developer.work.weixin.qq.com/document/path/95649
 func (clt *Client) ListOrderAccount(ctx context.Context, orderID string, limit int, cursor string) (*response.ResponseListOrderAccount, error) {
-
 	var result response.ResponseListOrderAccount
 
-	var req = object.HashMap{
+	req := object.HashMap{
 		"order_id": orderID,
 	}
 	if limit > 0 {

@@ -32,4 +32,3 @@ type RequestStoreUpdate struct {
 	ContractPhone string `json:"contract_phone"`
 	PicList       string `json:"pic_list"`
 }
-

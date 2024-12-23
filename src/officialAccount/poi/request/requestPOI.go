@@ -1,6 +1,5 @@
 package request
 
-
 type Photo struct {
 	PhotoUrl string `json:"photo_url"`
 }

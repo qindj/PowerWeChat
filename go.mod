@@ -2,7 +2,7 @@ module github.com/ArtisanCloud/PowerWeChat/v3
 
 go 1.23
 
-//replace github.com/ArtisanCloud/PowerLibs/v3 => ../PowerLibs
+// replace github.com/ArtisanCloud/PowerLibs/v3 => ../PowerLibs
 
 //replace github.com/ArtisanCloud/PowerSocialite/v3 => ../PowerSocialite
 
@@ -10,6 +10,7 @@ require (
 	github.com/ArtisanCloud/PowerLibs/v3 v3.2.6
 	github.com/ArtisanCloud/PowerSocialite/v3 v3.0.7
 	github.com/go-playground/assert/v2 v2.0.1
+	github.com/pkg/errors v0.9.1
 	github.com/redis/go-redis/v9 v9.0.3
 	github.com/stretchr/testify v1.9.0
 	go.opentelemetry.io/otel v1.4.0
@@ -24,7 +25,6 @@ require (
 	github.com/go-logr/logr v1.2.2 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/patrickmn/go-cache v2.1.0+incompatible // indirect
-	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	go.opentelemetry.io/otel/trace v1.4.0 // indirect
 	go.uber.org/atomic v1.7.0 // indirect

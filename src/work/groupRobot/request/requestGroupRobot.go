@@ -41,16 +41,16 @@ type GroupRobotMsgFile struct {
 }
 
 type GroupRobotMsgTemplateCard struct {
-	CardType              string                          `json:"card_type"`
-	Source                TemplateCardSource              `json:"source,omitempty"`
-	MainTitle             TemplateCardMainTitle           `json:"main_title,omitempty"`
-	CardImage             TemplateCardImage               `json:"card_image,omitempty"`
-	VerticalContentList   []TemplateCardVerticalContentListItem       `json:"vertical_content_list"`
-	EmphasisContent       TemplateCardEmphasisContent     `json:"emphasis_content,omitempty"`
-	SubTitleText          string                          `json:"sub_title_text"`
-	HorizontalContentList []TemplateCardHorizontalContentListItem     `json:"horizontal_content_list,omitempty"`
-	JumpList              []TemplateCardJumpListItem `json:"jump_list,omitempty"`
-	CardAction            TemplateCardCardAction                      `json:"card_action,omitempty"`
+	CardType              string                                  `json:"card_type"`
+	Source                TemplateCardSource                      `json:"source,omitempty"`
+	MainTitle             TemplateCardMainTitle                   `json:"main_title,omitempty"`
+	CardImage             TemplateCardImage                       `json:"card_image,omitempty"`
+	VerticalContentList   []TemplateCardVerticalContentListItem   `json:"vertical_content_list"`
+	EmphasisContent       TemplateCardEmphasisContent             `json:"emphasis_content,omitempty"`
+	SubTitleText          string                                  `json:"sub_title_text"`
+	HorizontalContentList []TemplateCardHorizontalContentListItem `json:"horizontal_content_list,omitempty"`
+	JumpList              []TemplateCardJumpListItem              `json:"jump_list,omitempty"`
+	CardAction            TemplateCardCardAction                  `json:"card_action,omitempty"`
 }
 type TemplateCardSource struct {
 	IconUrl string `json:"icon_url"`
