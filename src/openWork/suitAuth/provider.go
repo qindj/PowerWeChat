@@ -5,7 +5,6 @@ import (
 )
 
 func RegisterProvider(app kernel.ApplicationInterface) (*SuiteTicket, *AccessToken, error) {
-
 	ticket, err := NewSuiteTicket(app)
 	if err != nil {
 		return nil, nil, err
@@ -16,5 +15,4 @@ func RegisterProvider(app kernel.ApplicationInterface) (*SuiteTicket, *AccessTok
 	}
 
 	return ticket, accessToken, nil
-
 }

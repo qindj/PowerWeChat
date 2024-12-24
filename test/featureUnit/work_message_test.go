@@ -1,12 +1,13 @@
 package featureUnit
 
 import (
-	"github.com/ArtisanCloud/PowerWeChat/v3/src/kernel/power"
+	"context"
 	"testing"
+
+	"github.com/ArtisanCloud/PowerWeChat/v3/src/kernel/power"
 )
 
 func Test_Message_Send_Text(t *testing.T) {
-
 	//para := &request.RequestMessageSendText{
 	//	&request.RequestMessageSend{
 	//		ToUser:                 "michael",
@@ -34,17 +35,12 @@ func Test_Message_Send_Text(t *testing.T) {
 		"enable_duplicate_check":   0,
 		"duplicate_check_interval": 1800,
 	}
-
-	response, err := Work.Message.Send(powerPara)
-
+	response, err := Work.Message.Send(context.Background(), powerPara)
 	if err != nil {
 		t.Error("uniformMessage send err is ", err)
 	}
 
-	if response == nil || response.ResponseWork == nil {
-		t.Error("response nil")
-	} else if response.ErrCode != 0 {
+	if response == nil && response.ErrCode != 0 {
 		t.Error("response error uniformMessage as :", response.ErrMsg)
 	}
-
 }

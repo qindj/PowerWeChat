@@ -3,15 +3,15 @@ package kernel
 import (
 	"bytes"
 	"context"
-	"errors"
 	"fmt"
-	request2 "github.com/ArtisanCloud/PowerWeChat/v3/src/kernel/request"
-	response2 "github.com/ArtisanCloud/PowerWeChat/v3/src/kernel/response"
 	"io"
 	"net/http"
 	"strconv"
 	"strings"
 	"time"
+
+	request2 "github.com/ArtisanCloud/PowerWeChat/v3/src/kernel/request"
+	response2 "github.com/ArtisanCloud/PowerWeChat/v3/src/kernel/response"
 
 	"github.com/ArtisanCloud/PowerLibs/v3/http/contract"
 	"github.com/ArtisanCloud/PowerLibs/v3/http/helper"
@@ -51,7 +51,6 @@ type UploadContent struct {
 }
 
 func NewBaseClient(app *ApplicationInterface, token *AccessToken) (*BaseClient, error) {
-
 	config := (*app).GetConfig()
 	baseURI := config.GetString("http.base_uri", "/")
 	proxyURI := config.GetString("http.proxy_uri", "")
@@ -68,7 +67,6 @@ func NewBaseClient(app *ApplicationInterface, token *AccessToken) (*BaseClient, 
 			ProxyURI: proxyURI,
 		},
 	})
-
 	if err != nil {
 		return nil, err
 	}
@@ -98,7 +96,6 @@ func NewBaseClient(app *ApplicationInterface, token *AccessToken) (*BaseClient, 
 	}
 
 	return client, nil
-
 }
 
 func (client *BaseClient) HttpGet(ctx context.Context, url string, query *object.StringMap, outHeader interface{}, outBody interface{}) (interface{}, error) {
@@ -143,6 +140,7 @@ func (client *BaseClient) HttpPostJson(ctx context.Context, url string, data int
 		outBody,
 	)
 }
+
 func (client *BaseClient) HttpPostJsonByEncode(ctx context.Context, url string, data interface{}, query *object.StringMap, outHeader interface{}, outBody interface{}) (interface{}, error) {
 	return client.RequestByEncodedData(
 		ctx,
@@ -159,7 +157,6 @@ func (client *BaseClient) HttpPostJsonByEncode(ctx context.Context, url string, 
 }
 
 func (client *BaseClient) HttpUpload(ctx context.Context, url string, files *object.HashMap, form *UploadForm, query interface{}, outHeader interface{}, outBody interface{}) (interface{}, error) {
-
 	// http client request
 	df := client.HttpHelper.Df().WithContext(ctx).Uri(url).Method(http.MethodPost)
 
@@ -196,7 +193,6 @@ func (client *BaseClient) HttpUpload(ctx context.Context, url string, files *obj
 		for k, v := range mems {
 			multipart.FileMem(form.FileName, k, v)
 		}
-
 	})
 
 	// set query params
@@ -231,13 +227,11 @@ func (client *BaseClient) HttpUpload(ctx context.Context, url string, files *obj
 	}
 
 	return response, err
-
 }
 
 func (client *BaseClient) Request(ctx context.Context, url string, method string, options *object.HashMap,
 	returnRaw bool, outHeader interface{}, outBody interface{},
 ) (*http.Response, error) {
-
 	// http client request
 	client.QueryRaw = returnRaw
 	df := client.HttpHelper.Df().WithContext(ctx).Uri(url).Method(method)
@@ -308,13 +302,11 @@ func (client *BaseClient) Request(ctx context.Context, url string, method string
 	}
 
 	return response, err
-
 }
 
 func (client *BaseClient) RequestByEncodedData(ctx context.Context, url string, method string, options *object.HashMap,
 	returnRaw bool, outHeader interface{}, outBody interface{},
 ) (*http.Response, error) {
-
 	// http client request
 	client.QueryRaw = returnRaw
 	df := client.HttpHelper.Df().WithContext(ctx).Uri(url).Method(method)
@@ -383,7 +375,6 @@ func (client *BaseClient) RequestByEncodedData(ctx context.Context, url string, 
 	}
 
 	return response, err
-
 }
 
 func (client *BaseClient) RequestRaw(ctx context.Context, url string, method string, options *object.HashMap, outHeader interface{}, outBody interface{}) (*http.Response, error) {
@@ -391,7 +382,6 @@ func (client *BaseClient) RequestRaw(ctx context.Context, url string, method str
 }
 
 func (client *BaseClient) RegisterHttpMiddlewares() {
-
 	// access token
 	accessTokenMiddleware := client.GetMiddlewareOfAccessToken
 	// log
@@ -421,10 +411,9 @@ func (client *BaseClient) OverrideGetMiddlewareOfAccessToken() {
 	client.GetMiddlewareOfAccessToken = func(handle contract.RequestHandle) contract.RequestHandle {
 		return func(request *http.Request) (response *http.Response, err error) {
 			// 前置中间件
-			//fmt.Println("获取access token, 在请求前执行")
+			// fmt.Println("获取access token, 在请求前执行")
 
 			accessToken := (*client.App).GetAccessToken()
-			// accessToken := client.Token
 
 			if accessToken != nil {
 				config := (*client.App).GetContainer().Config
@@ -442,7 +431,7 @@ func (client *BaseClient) OverrideGetMiddlewareOfAccessToken() {
 
 			// handle 执行之后就可以操作 response 和 err
 			// 后置中间件
-			//fmt.Println("获取access token, 在请求后执行")
+			// fmt.Println("获取access token, 在请求后执行")
 			return
 		}
 	}
@@ -452,7 +441,6 @@ func (client *BaseClient) OverrideGetMiddlewareOfLog() {
 	client.GetMiddlewareOfLog = func(logger contract2.LoggerInterface) contract.RequestMiddleware {
 		return func(handle contract.RequestHandle) contract.RequestHandle {
 			return func(request *http.Request) (response *http.Response, err error) {
-
 				logger = logger.WithContext(request.Context())
 
 				// 此处请求前后日志根据 log 配置中的 level 判断是否打印
@@ -475,17 +463,16 @@ func (client *BaseClient) OverrideGetMiddlewareOfRefreshAccessToken() {
 		return contract.RequestMiddleware(func(handle contract.RequestHandle) contract.RequestHandle {
 			return func(request *http.Request) (response *http.Response, err error) {
 				// 前置中间件
-				//fmt.Println("检查微信返回错误，token是否失效，执行前访问")
+				// fmt.Println("检查微信返回错误，token是否失效，执行前访问")
 
 				response, err = handle(request)
 				// handle 执行之后就可以操作 response 和 err
-
 				if err != nil {
 					return response, err
 				}
 
 				if response.StatusCode != http.StatusOK {
-					return response, errors.New(fmt.Sprintf("http response code:%d", response.StatusCode))
+					return response, fmt.Errorf("http response code:%d", response.StatusCode)
 				}
 
 				rs, err := client.CheckTokenNeedRefresh(request, response, retry)
@@ -496,7 +483,7 @@ func (client *BaseClient) OverrideGetMiddlewareOfRefreshAccessToken() {
 				}
 
 				// 后置中间件
-				//fmt.Println("检查微信返回错误，token是否失效，, 在请求后执行")
+				// fmt.Println("检查微信返回错误，token是否失效，, 在请求后执行")
 				return
 			}
 		})
@@ -504,7 +491,6 @@ func (client *BaseClient) OverrideGetMiddlewareOfRefreshAccessToken() {
 }
 
 func (client *BaseClient) CheckTokenNeedRefresh(req *http.Request, rs *http.Response, retry int) (*http.Response, error) {
-
 	ctx := req.Context()
 
 	// 如何微信返回的是二进制数据流，那么就无须判断返回的err code是否正常
@@ -542,6 +528,9 @@ func (client *BaseClient) CheckTokenNeedRefresh(req *http.Request, rs *http.Resp
 			// clone 一个request
 			client.Logger.WithContext(ctx).InfoF("refresh token, retry:%d", retry)
 			token, err := client.Token.GetToken(ctx, false)
+			if err != nil {
+				return nil, err
+			}
 			q := req.URL.Query()
 			q.Set(client.Token.TokenKey, token.AccessToken)
 			req.URL.RawQuery = q.Encode()
@@ -564,10 +553,6 @@ func (client *BaseClient) CheckTokenNeedRefresh(req *http.Request, rs *http.Resp
 			}
 
 			return res2, err
-			//b, err := io.ReadAll(res2.Body)
-			//rs.Body = io.NopCloser(bytes.NewBuffer(b))
-			//content := string(b)
-			//fmt2.Dump(content)
 		}
 	}
 

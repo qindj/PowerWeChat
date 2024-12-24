@@ -45,26 +45,22 @@ func NewAccessToken(app kernel.ApplicationInterface, corpId, permanentCode strin
 }
 
 func (accessToken *AccessToken) OverrideGetEndpoint() {
-
 	app := accessToken.App
 	token := app.GetComponent("SuiteAccessToken").(*suit.AccessToken)
 	accessToken.GetEndpoint = func() (string, error) {
 		suiteAccessToken, _ := token.AccessToken.GetToken(context.Background(), false)
 		return accessToken.EndpointToGetToken + `?suite_access_token=` + url.QueryEscape(suiteAccessToken.AccessToken), nil
 	}
-
 }
 
 // Override GetCredentials
 func (accessToken *AccessToken) OverrideGetCredentials() {
-
 	app := accessToken.App
 	config := app.GetContainer().GetConfig()
 	appID := (*config)["app_id"].(string)
 	corpID := accessToken.corpID
 	permanentCode := accessToken.permanentCode
 	accessToken.GetCredentials = func() *object.StringMap {
-
 		return &object.StringMap{
 			"auth_corpid":    corpID,
 			"permanent_code": permanentCode,
