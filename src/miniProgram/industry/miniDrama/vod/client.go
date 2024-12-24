@@ -522,3 +522,17 @@ func (comp *Client) SearchDoAccountAuthorized(ctx context.Context) (result *resp
 
 	return
 }
+
+// 开发者可通过后台接口设置刷剧剧目
+// https://developers.weixin.qq.com/miniprogram/dev/platform-capabilities/industry/videoplayer.html#%E5%88%B7%E5%89%A7%E7%BB%84%E4%BB%B6
+func (comp *Client) SetFlushDrama(ctx context.Context, in *request.SetFlushDramaRequest) (result *response.BaseResponse, err error) {
+
+	params, err := power.StructToHashMap(in)
+	if err != nil {
+
+		return nil, err
+	}
+	_, err = comp.BaseClient.HttpPostJson(ctx, "wxadrama/developersetflushdrama", params, nil, nil, &result)
+	return
+
+}
