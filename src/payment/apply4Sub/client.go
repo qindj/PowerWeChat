@@ -138,6 +138,6 @@ func (comp *Client) GetApplyByApplymentId(ctx context.Context, applymentId strin
 	result := &response.ResponseGetApplyForBusiness{}
 
 	endpoint := "/v3/applyment4sub/applyment/applyment_id/" + applymentId
-	_, err := comp.Request(ctx, endpoint, nil, http.MethodGet,&object.HashMap{}, false, nil, result)
+	_, err := comp.Request(ctx, endpoint, nil, http.MethodGet, &object.HashMap{}, false, nil, result)
 	return result, err
 }

@@ -1,6 +1,5 @@
 package request
 
-
 type RequestMatchRule struct {
 	TagID              string `json:"tag_id"`
 	Sex                string `json:"sex"`

@@ -1,11 +1,11 @@
 package request
 
 type RequestCustomerStrategyCreate struct {
-	ParentID     int64            `json:"parent_id" `
-	StrategyName string           `json:"strategy_name"`
-	AdminList    []string         `json:"admin_list"`
-	Privilege    RequestCustomerStrategyPrivilege   `json:"privilege"`
-	Range        []RequestCustomerStrategyRange `json:"range"`
+	ParentID     int64                            `json:"parent_id" `
+	StrategyName string                           `json:"strategy_name"`
+	AdminList    []string                         `json:"admin_list"`
+	Privilege    RequestCustomerStrategyPrivilege `json:"privilege"`
+	Range        []RequestCustomerStrategyRange   `json:"range"`
 }
 
 type RequestCustomerStrategyPrivilege struct {
