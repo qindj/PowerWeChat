@@ -134,19 +134,18 @@ func (m *MemberCard) GetCardType() string {
 }
 
 type BonusRule struct {
-	CostMoneyUnit        int `json:"cost_money_unit,omitempty"`
-	IncreaseBonus        int `json:"increase_bonus,omitempty"`
-	MaxIncreaseBonus     int `json:"max_increase_bonus,omitempty"`
-	InitIncreaseBonus    int `json:"init_increase_bonus,omitempty"`
-	CostBonusUnit        int `json:"cost_bonus_unit,omitempty"`
-	ReduceMoney          int `json:"reduce_money,omitempty"`
-	LeastMoneyToUseBonus int `json:"least_money_to_use_bonus,omitempty"`
-	MaxReduceBonus       int `json:"max_reduce_bonus,omitempty"`
-	BaseInfo     *BaseInfo `json:"base_info"`
-	BonusCleared string    `json:"bonus_cleared"`
-	BonusRules   string    `json:"bonus_rules"`
-	Prerogative  string    `json:"prerogative"`
-
+	CostMoneyUnit        int       `json:"cost_money_unit,omitempty"`
+	IncreaseBonus        int       `json:"increase_bonus,omitempty"`
+	MaxIncreaseBonus     int       `json:"max_increase_bonus,omitempty"`
+	InitIncreaseBonus    int       `json:"init_increase_bonus,omitempty"`
+	CostBonusUnit        int       `json:"cost_bonus_unit,omitempty"`
+	ReduceMoney          int       `json:"reduce_money,omitempty"`
+	LeastMoneyToUseBonus int       `json:"least_money_to_use_bonus,omitempty"`
+	MaxReduceBonus       int       `json:"max_reduce_bonus,omitempty"`
+	BaseInfo             *BaseInfo `json:"base_info"`
+	BonusCleared         string    `json:"bonus_cleared"`
+	BonusRules           string    `json:"bonus_rules"`
+	Prerogative          string    `json:"prerogative"`
 }
 type ScenicTicket struct {
 	BaseInfo *BaseInfo `json:"base_info"`

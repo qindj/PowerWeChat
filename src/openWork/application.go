@@ -158,7 +158,6 @@ func (app *OpenWork) GetConfig() *kernel.Config {
 }
 
 func (app *OpenWork) GetComponent(name string) interface{} {
-
 	switch name {
 	case "User":
 		return app.User
@@ -180,11 +179,9 @@ func (app *OpenWork) GetComponent(name string) interface{} {
 	default:
 		return nil
 	}
-
 }
 
 func MapUserConfig(userConfig *UserConfig) (*object.HashMap, error) {
-
 	baseURI := "https://qyapi.weixin.qq.com/"
 	if userConfig.Http.BaseURI != "" {
 		baseURI = userConfig.Http.BaseURI
@@ -194,7 +191,6 @@ func MapUserConfig(userConfig *UserConfig) (*object.HashMap, error) {
 		timeout = userConfig.Http.Timeout
 	}
 	config := &object.HashMap{
-
 		"app_id":          userConfig.AppID,
 		"secret":          userConfig.Secret,
 		"auth_code":       userConfig.AuthCode,
@@ -250,6 +246,9 @@ func (app *OpenWork) ProviderClient(corpID string, permanentCode string, externC
 		File:  (*log)["file"].(string),
 		ENV:   (*log)["env"].(string),
 	}
+	if driver, ok := (*log)["driver"].(contract.LoggerInterface); ok {
+		workLog.Driver = driver
+	}
 	debug := config.GetBool("debug", false)
 	httpDebug := config.GetBool("http_debug", false)
 	if externConfig != nil {
@@ -264,6 +263,9 @@ func (app *OpenWork) ProviderClient(corpID string, permanentCode string, externC
 		}
 		if externConfig.OAuth.Callback != "" {
 			oauth.Callback = externConfig.OAuth.Callback
+		}
+		if driver, ok := externConfig.Log.Driver.(contract.LoggerInterface); ok {
+			workLog.Driver = driver
 		}
 		if externConfig.Log.File != "" {
 			workLog.File = externConfig.Log.File
@@ -314,6 +316,9 @@ func (app *OpenWork) ThirdpartyClient(corpID string, permanentCode string, exter
 		File:  (*log)["file"].(string),
 		ENV:   (*log)["env"].(string),
 	}
+	if driver, ok := (*log)["driver"].(contract.LoggerInterface); ok {
+		workLog.Driver = driver
+	}
 	debug := config.GetBool("debug", false)
 	httpDebug := config.GetBool("http_debug", false)
 	if externConfig != nil {
@@ -334,6 +339,9 @@ func (app *OpenWork) ThirdpartyClient(corpID string, permanentCode string, exter
 		}
 		if externConfig.Log.ENV != "" {
 			workLog.ENV = externConfig.Log.ENV
+		}
+		if driver, ok := externConfig.Log.Driver.(contract.LoggerInterface); ok {
+			workLog.Driver = driver
 		}
 		if externConfig.Log.Level != "" {
 			workLog.Level = externConfig.Log.Level
