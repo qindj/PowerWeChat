@@ -1,15 +1,16 @@
 package featureUnit
 
 import (
-	"github.com/ArtisanCloud/PowerLibs/v3/fmt"
+	"context"
 	"testing"
+
+	"github.com/ArtisanCloud/PowerLibs/v3/fmt"
 )
 
 func Test_ExternalContact_Get_Group_MSG_Result(t *testing.T) {
-
 	msgID := "msg_ViZBwAA72X9XCh4Cx5ku9OVFb2thQ" // walle
-	//msgID := "msg_ViZBwAAT_5pzEfUhaT2xbSbFxhTgw"  // matt
-	response, _ := Work.ExternalContactGroupChat.Get(msgID, false)
+	// msgID := "msg_ViZBwAAT_5pzEfUhaT2xbSbFxhTgw"  // matt
+	response, _ := Work.ExternalContactGroupChat.Get(context.Background(), msgID, 0)
 
 	if response == nil {
 		t.Error("response nil")
@@ -18,5 +19,4 @@ func Test_ExternalContact_Get_Group_MSG_Result(t *testing.T) {
 	}
 
 	fmt.Dump(response)
-
 }

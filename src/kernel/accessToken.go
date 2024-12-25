@@ -49,6 +49,7 @@ type AccessToken struct {
 func NewAccessToken(app ApplicationInterface) (*AccessToken, error) {
 	config := (app).GetConfig()
 	baseURI := config.GetString("http.base_uri", "/")
+	proxyURI := config.GetString("http.proxy_uri", "")
 
 	var cacheClient cache.CacheInterface = nil
 	c := config.Get("cache", nil)
@@ -58,6 +59,9 @@ func NewAccessToken(app ApplicationInterface) (*AccessToken, error) {
 
 	h, err := helper.NewRequestHelper(&helper.Config{
 		BaseUrl: baseURI,
+		ClientConfig: &contract3.ClientConfig{
+			ProxyURI: proxyURI,
+		},
 	})
 	if err != nil {
 		return nil, err
@@ -86,7 +90,6 @@ func NewAccessToken(app ApplicationInterface) (*AccessToken, error) {
 }
 
 func (accessToken *AccessToken) GetToken(ctx context.Context, refresh bool) (resToken *response2.ResponseGetToken, err error) {
-
 	cacheKey := accessToken.GetCacheKey()
 	cache := accessToken.GetCache()
 
@@ -154,7 +157,6 @@ func (accessToken *AccessToken) SetToken(token *response2.ResponseGetToken) (tok
 		return nil, errors.New("failed to cache access token")
 	}
 	return accessToken, err
-
 }
 
 func (accessToken *AccessToken) getFormatToken(token object.HashMap) (*response2.ResponseGetToken, error) {
@@ -164,7 +166,6 @@ func (accessToken *AccessToken) getFormatToken(token object.HashMap) (*response2
 
 	if accessToken.TokenKey == "access_token" && token["access_token"] != nil {
 		resToken.AccessToken = token[accessToken.TokenKey].(string)
-
 	} else if accessToken.TokenKey == "component_access_token" && token["component_access_token"] != nil {
 		resToken.AccessToken = token[accessToken.TokenKey].(string)
 		resToken.ComponentAccessToken = token[accessToken.TokenKey].(string)
@@ -201,7 +202,6 @@ func (accessToken *AccessToken) Refresh(ctx context.Context) contract.AccessToke
 }
 
 func (accessToken *AccessToken) requestToken(ctx context.Context, credentials *object.StringMap) (*response2.ResponseGetToken, error) {
-
 	res, err := accessToken.sendRequest(ctx, credentials)
 	if err != nil {
 		return nil, err
@@ -214,14 +214,13 @@ func (accessToken *AccessToken) requestToken(ctx context.Context, credentials *o
 		token.AuthorizerRefreshToken == "" &&
 		token.SuiteAccessToken == "" &&
 		token.ProviderAccessToken == "") {
-		return nil, errors.New(fmt.Sprintf("Request access_token fail: %v", res))
+		return nil, fmt.Errorf("Request access_token fail: %v", res)
 	}
 
 	return token, nil
 }
 
 func (accessToken *AccessToken) ApplyToRequest(request *http.Request, requestOptions *object.HashMap) (*http.Request, error) {
-
 	// query Access Token power
 	mapToken, err := accessToken.getQuery(request.Context())
 	if err != nil {
@@ -237,7 +236,6 @@ func (accessToken *AccessToken) ApplyToRequest(request *http.Request, requestOpt
 }
 
 func (accessToken *AccessToken) sendRequest(ctx context.Context, credential *object.StringMap) (*response2.ResponseGetToken, error) {
-
 	key := "json"
 	if accessToken.RequestMethod == http.MethodGet {
 		key = "query"
@@ -256,26 +254,24 @@ func (accessToken *AccessToken) sendRequest(ctx context.Context, credential *obj
 	df := accessToken.HttpHelper.Df().WithContext(ctx).Uri(strEndpoint).
 		Method(accessToken.RequestMethod)
 
-	// 检查是否需要有请求参数配置
-	if options != nil {
-		// set query key values
-		if (*options)["query"] != nil {
-			queries := (*options)["query"].(*object.StringMap)
-			if queries != nil {
-				for k, v := range *queries {
-					df.Query(k, v)
-				}
+		// 检查是否需要有请求参数配置
+	// set query key values
+	if (*options)["query"] != nil {
+		queries := (*options)["query"].(*object.StringMap)
+		if queries != nil {
+			for k, v := range *queries {
+				df.Query(k, v)
 			}
 		}
-
-		// set body json
-		if (*options)["json"] != nil {
-			df.Json((*options)["json"])
-		}
-		//if (*options)["form_params"] != nil {
-		//	df.Json((*options)["form_params"])
-		//}
 	}
+
+	// set body json
+	if (*options)["json"] != nil {
+		df.Json((*options)["json"])
+	}
+	//if (*options)["form_params"] != nil {
+	//	df.Json((*options)["form_params"])
+	//}
 
 	rs, err := df.Request()
 	if err != nil {
@@ -297,7 +293,6 @@ func (accessToken *AccessToken) SetCacheKey(key string) {
 // 2. 计算字符串的md5。"testappidtestsecret"的md5值为"edc5f6181730baffc0b88cf96658aeff"
 // 3. 加上PowerWeChat前缀命名空间："powerwechat.access_token."，最终结果为："powerwechat.access_token.edc5f6181730baffc0b88cf96658aeff"
 func (accessToken *AccessToken) GetCacheKey() string {
-
 	cacheKey := ""
 	if accessToken.CacheTokenKey != "" {
 		cacheKey = accessToken.CacheTokenKey
@@ -315,7 +310,7 @@ func (accessToken *AccessToken) GetDefaultCacheKey() string {
 	cacheKey := accessToken.CachePrefix + hex.EncodeToString(buffer[:])
 
 	// tbf
-	//fmt2.Dump(cacheKey)
+	// fmt2.Dump(cacheKey)
 
 	return cacheKey
 }
@@ -339,11 +334,9 @@ func (accessToken *AccessToken) getQuery(ctx context.Context) (*object.StringMap
 	}
 
 	return arrayReturn, err
-
 }
 
 func (accessToken *AccessToken) RegisterHttpMiddlewares() {
-
 	// log
 	logMiddleware := accessToken.GetMiddlewareOfLog
 
@@ -363,7 +356,6 @@ func (accessToken *AccessToken) OverrideGetMiddlewareOfLog() {
 	accessToken.GetMiddlewareOfLog = func(logger contract2.LoggerInterface) contract3.RequestMiddleware {
 		return func(handle contract3.RequestHandle) contract3.RequestHandle {
 			return func(request *http.Request) (response *http.Response, err error) {
-
 				logger := logger.WithContext(request.Context())
 
 				// 此处请求前后日志根据 log 配置中的 level 判断是否打印
@@ -383,7 +375,6 @@ func (accessToken *AccessToken) OverrideGetMiddlewareOfLog() {
 }
 
 func (accessToken *AccessToken) OverrideGetEndpoint() {
-
 	accessToken.GetEndpoint = func() (string, error) {
 		if accessToken.EndpointToGetToken == "" {
 			return "", errors.New("no endpoint for access token request")
@@ -391,7 +382,6 @@ func (accessToken *AccessToken) OverrideGetEndpoint() {
 
 		return accessToken.EndpointToGetToken, nil
 	}
-
 }
 
 func (accessToken *AccessToken) getTokenKey() string {

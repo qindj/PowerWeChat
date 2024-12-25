@@ -16,7 +16,7 @@ type Guard struct {
 }
 
 func NewGuard(app *kernel.ApplicationInterface) *Guard {
-	//config := (*app).GetContainer().GetConfig()
+	// config := (*app).GetContainer().GetConfig()
 
 	guard := &Guard{
 		kernel.NewServerGuard(app),
@@ -28,7 +28,6 @@ func NewGuard(app *kernel.ApplicationInterface) *Guard {
 	guard.OverrideToCallbackType()
 
 	return guard
-
 }
 
 // Override Validate
@@ -54,7 +53,6 @@ func (guard *Guard) OverrideShouldReturnRawResponse() {
 }
 
 func (guard *Guard) OverrideToCallbackType() {
-
 	// switch message type
 	guard.ToCallbackType = func(callbackHeader contract.EventInterface, buf []byte) (decryptMessage interface{}, err error) {
 		switch callbackHeader.GetMsgType() {
@@ -107,12 +105,10 @@ func (guard *Guard) OverrideToCallbackType() {
 
 		return decryptMessage, err
 	}
-
 }
 
 // switch event
 func (guard *Guard) toCallbackEvent(callbackHeader contract.EventInterface, buf []byte) (decryptMessage interface{}, err error) {
-
 	switch callbackHeader.GetEvent() {
 
 	// event is change contact
@@ -122,6 +118,12 @@ func (guard *Guard) toCallbackEvent(callbackHeader contract.EventInterface, buf 
 
 	// events
 	case models2.CALLBACK_EVENT_SUBSCRIBE:
+		decryptMsg := &models2.EventSubscribe{}
+		err = xml.Unmarshal(buf, decryptMsg)
+		decryptMessage = decryptMsg
+		break
+
+	case models2.CALLBACK_EVENT_UNSUBSCRIBE:
 		decryptMsg := &models2.EventSubscribe{}
 		err = xml.Unmarshal(buf, decryptMsg)
 		decryptMessage = decryptMsg
@@ -232,7 +234,6 @@ func (guard *Guard) toCallbackEvent(callbackHeader contract.EventInterface, buf 
 
 // switch event change type
 func (guard *Guard) toCallbackEventChangeType(callbackHeader contract.EventInterface, buf []byte) (decryptMessage interface{}, err error) {
-
 	switch callbackHeader.GetChangeType() {
 
 	// change type is for user event

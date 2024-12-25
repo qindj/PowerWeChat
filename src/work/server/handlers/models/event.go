@@ -9,6 +9,7 @@ import (
 
 const (
 	CALLBACK_EVENT_SUBSCRIBE                = "subscribe"
+	CALLBACK_EVENT_UNSUBSCRIBE              = "unsubscribe"
 	CALLBACK_EVENT_ENTER_AGENT              = "enter_agent"
 	CALLBACK_EVENT_LOCATION                 = "LOCATION"
 	CALLBACK_EVENT_BATCH_JOB_RESULT         = "batch_job_result"
@@ -263,7 +264,7 @@ type EventTemplateCardEvent struct {
 type EventTemplateCardMenuEvent struct {
 	contract.EventInterface
 	models.CallbackMessageHeader
-	//EventKey     string `xml:"EventKey"`
+	// EventKey     string `xml:"EventKey"`
 	TaskID       string `xml:"TaskId"`
 	CardType     string `xml:"CardType"`
 	ResponseCode string `xml:"ResponseCode"`

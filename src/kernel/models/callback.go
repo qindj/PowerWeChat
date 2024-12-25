@@ -2,6 +2,7 @@ package models
 
 import (
 	"encoding/xml"
+
 	"github.com/ArtisanCloud/PowerWeChat/v3/src/kernel/contract"
 )
 

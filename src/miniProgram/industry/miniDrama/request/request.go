@@ -179,3 +179,15 @@ type AccountAuthorizedRequest struct {
 	AuthorizedAppid string `json:"authorized_appid"`
 	AuthzExpireTime int64  `json:"authz_expire_time,omitempty"`
 }
+
+// 开发者可通过后台接口设置刷剧剧目
+// https://developers.weixin.qq.com/miniprogram/dev/platform-capabilities/industry/videoplayer.html#%E5%88%B7%E5%89%A7%E7%BB%84%E4%BB%B6
+type SetFlushDramaRequest struct {
+	List []*DramaInfo `json:"list"`
+}
+
+type DramaInfo struct {
+	SrcAppid  string `json:"src_appid"`
+	DramaId   string `json:"drama_id"`
+	DramaName string `json:"drama_name"`
+}

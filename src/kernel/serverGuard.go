@@ -61,7 +61,6 @@ type ServerGuard struct {
 }
 
 func NewServerGuard(app *ApplicationInterface) *ServerGuard {
-
 	serverGuard := &ServerGuard{
 		Observable: support.NewObservable(),
 		App:        app,
@@ -86,7 +85,6 @@ func NewServerGuard(app *ApplicationInterface) *ServerGuard {
 	serverGuard.OverrideHandleEvent()
 
 	return serverGuard
-
 }
 
 func (serverGuard *ServerGuard) OverrideNotify() {
@@ -126,7 +124,6 @@ func (serverGuard *ServerGuard) VerifyURL(request *http.Request) (httpRS *http.R
 
 // https://developer.work.weixin.qq.com/document/path/90930
 func (serverGuard *ServerGuard) Serve(request *http.Request) (response *http.Response, err error) {
-
 	logger := (*serverGuard.App).GetComponent("Logger").(*logger2.Logger)
 	logger.Info("Request received:",
 		"method", request.Method,
@@ -148,7 +145,6 @@ func (serverGuard *ServerGuard) Serve(request *http.Request) (response *http.Res
 }
 
 func (serverGuard *ServerGuard) validate(request *http.Request) (*ServerGuard, error) {
-
 	if !serverGuard.alwaysValidate && serverGuard.IsSafeMode(request) {
 		return serverGuard, nil
 	}
@@ -207,7 +203,7 @@ func (serverGuard *ServerGuard) GetEvent(request *http.Request) (callback *model
 }
 
 func (serverGuard *ServerGuard) GetMessage(request *http.Request) (callback *models.Callback, callbackHeader *models.CallbackMessageHeader, Decrypted interface{}, err error) {
-	var b = []byte("")
+	b := []byte("")
 	if request.Body != http.NoBody {
 		b, err = io.ReadAll(request.Body)
 		if err != nil || b == nil {
@@ -302,35 +298,26 @@ func (serverGuard *ServerGuard) OverrideGetToken() {
 }
 
 func (serverGuard *ServerGuard) buildResponse(request *http.Request, to string, from string, message interface{}) string {
-
 	var toMessage contract.MessageInterface
-	switch message.(type) {
+	switch message := message.(type) {
 	case nil:
 		return SUCCESS_EMPTY_RESPONSE
 
 	case string:
-		strMessage := message.(string)
-		if SUCCESS_EMPTY_RESPONSE == strMessage {
+		if SUCCESS_EMPTY_RESPONSE == message {
 			return SUCCESS_EMPTY_RESPONSE
 		} else {
-			toMessage = messages.NewText(message.(string))
+			toMessage = messages.NewText(message)
 			break
 		}
 	case int:
-		toMessage = messages.NewText(strconv.Itoa(message.(int)))
-		break
-
+		toMessage = messages.NewText(strconv.Itoa(message))
 	case messages.Raw:
-		return message.(messages.Raw).Get("content", SUCCESS_EMPTY_RESPONSE).(string)
-
-	case object.HashMap:
-		toMessage = messages.NewNews(message.([]*object.HashMap))
-		break
-	case *object.HashMap:
-		toMessage = messages.NewNews(message.([]*object.HashMap))
-		break
+		return message.Get("content", SUCCESS_EMPTY_RESPONSE).(string)
+	case []*object.HashMap:
+		toMessage = messages.NewNews(message)
 	case contract.MessageInterface:
-		toMessage = message.(contract.MessageInterface)
+		toMessage = message
 	default:
 
 	}
@@ -340,7 +327,6 @@ func (serverGuard *ServerGuard) buildResponse(request *http.Request, to string, 
 
 func (serverGuard *ServerGuard) OverrideHandleEvent() {
 	serverGuard.HandleEvent = func(r *http.Request, closure func(event contract.EventInterface) interface{}) (*object.HashMap, error) {
-
 		_, msgHeader, err := serverGuard.GetEvent(r)
 		if err != nil {
 			return nil, err
@@ -366,7 +352,6 @@ func (serverGuard *ServerGuard) OverrideHandleEvent() {
 }
 
 func (serverGuard *ServerGuard) handleRequest(request *http.Request) (*object.HashMap, error) {
-
 	_, msgHeader, decryptedMessage, err := serverGuard.GetMessage(request)
 	if err != nil {
 		return nil, err
@@ -375,7 +360,7 @@ func (serverGuard *ServerGuard) handleRequest(request *http.Request) (*object.Ha
 	fromUserName := ""
 	toUserName := ""
 
-	var messageType = "text"
+	messageType := "text"
 	if msgHeader != nil {
 		if msgHeader.MsgType != "" {
 			messageType = msgHeader.MsgType
@@ -393,7 +378,6 @@ func (serverGuard *ServerGuard) handleRequest(request *http.Request) (*object.Ha
 }
 
 func (serverGuard *ServerGuard) buildReply(request *http.Request, to string, from string, message contract.MessageInterface) (response string) {
-
 	prepends := &object.HashMap{
 		"ToUserName":   to,
 		"FromUserName": from,
@@ -469,13 +453,12 @@ func (serverGuard *ServerGuard) ParseMessage(content string, dataType string) (c
 }
 
 func (serverGuard *ServerGuard) parseMessage2(content string) (dataContent *object.HashMap, err error) {
-
 	dataContent = nil
 	if content != "" {
 		// check xml format
 		if content[0] == '<' {
 			dataContent = &object.HashMap{}
-			//err = xml.Unmarshal([]byte(content), &dataContent)
+			// err = xml.Unmarshal([]byte(content), &dataContent)
 			*dataContent, err = object.Xml2Map([]byte(content))
 			if err != nil {
 				return nil, err
@@ -494,12 +477,12 @@ func (serverGuard *ServerGuard) parseMessage2(content string) (dataContent *obje
 
 	return dataContent, err
 }
+
 func (serverGuard *ServerGuard) shouldReturnRawResponse(request *http.Request) bool {
 	return false
 }
 
 func (serverGuard *ServerGuard) DecryptEvent(request *http.Request, content string) (callbackHeader *models.CallbackMessageHeader, err error) {
-
 	encryptor := (*serverGuard.App).GetComponent("Encryptor").(*Encryptor)
 	query := request.URL.Query()
 	buf, cryptErr := encryptor.Decrypt(
@@ -525,11 +508,9 @@ func (serverGuard *ServerGuard) DecryptEvent(request *http.Request, content stri
 	callbackHeader.Content = buf
 
 	return callbackHeader, err
-
 }
 
 func (serverGuard *ServerGuard) decryptEchoStr(request *http.Request, content string) (decryptMessage string, err error) {
-
 	encryptor := (*serverGuard.App).GetComponent("Encryptor").(*Encryptor)
 	query := request.URL.Query()
 	buf, cryptErr := encryptor.VerifyUrl(
@@ -543,11 +524,9 @@ func (serverGuard *ServerGuard) decryptEchoStr(request *http.Request, content st
 	}
 
 	return string(buf), err
-
 }
 
 func (serverGuard *ServerGuard) decryptMessage(request *http.Request, content string) (callbackHeader *models.CallbackMessageHeader, decryptMessage interface{}, err error) {
-
 	encryptor := (*serverGuard.App).GetComponent("Encryptor").(*Encryptor)
 	query := request.URL.Query()
 	buf, cryptErr := encryptor.Decrypt(
@@ -573,5 +552,4 @@ func (serverGuard *ServerGuard) decryptMessage(request *http.Request, content st
 	decryptMessage, err = serverGuard.ToCallbackType(callbackHeader, buf)
 
 	return callbackHeader, decryptMessage, err
-
 }

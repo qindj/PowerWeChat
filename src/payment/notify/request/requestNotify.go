@@ -28,6 +28,3 @@ type EncryptedResource struct {
 
 	Plaintext string // Ciphertext 解密后内容
 }
-
-
-

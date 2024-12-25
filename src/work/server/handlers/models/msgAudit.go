@@ -5,7 +5,10 @@ import (
 	"github.com/ArtisanCloud/PowerWeChat/v3/src/kernel/models"
 )
 
-const CALLBACK_EVENT_MSGAUDIT_NOTIFY = "msgaudit_notify"
+const (
+	CALLBACK_EVENT_MSGAUDIT_NOTIFY   = "msgaudit_notify"
+	CALLBACK_EVENT_UNLICENSED_NOTIFY = "unlicensed_notify"
+)
 
 type EventMsgAuditNotify struct {
 	contract.EventInterface

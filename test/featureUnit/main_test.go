@@ -1,19 +1,21 @@
 package featureUnit
 
 import (
-	"github.com/ArtisanCloud/PowerWeChat/v3/src/payment"
-	"github.com/ArtisanCloud/PowerWeChat/v3/src/work"
 	"log"
 	"os"
 	"strconv"
 	"testing"
+
+	"github.com/ArtisanCloud/PowerWeChat/v3/src/payment"
+	"github.com/ArtisanCloud/PowerWeChat/v3/src/work"
 )
 
-var Work *work.Work
-var Payment *payment.Payment
+var (
+	Work    *work.Work
+	Payment *payment.Payment
+)
 
 func TestMain(m *testing.M) {
-
 	log.Println("Before Test: [++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 
 	// init test app
@@ -23,7 +25,6 @@ func TestMain(m *testing.M) {
 	log.Println("After Test: ------------------------------------------------------------------]")
 
 	os.Exit(exitVal)
-
 }
 
 func GetWorkConfig() *work.UserConfig {
@@ -34,18 +35,12 @@ func GetWorkConfig() *work.UserConfig {
 		Secret:  os.Getenv("secret"),
 
 		ResponseType: os.Getenv("array"),
-		Log: work.Log{
-			"debug",
-			"./wechat/info.log",
-			"./wechat/error.log",
-			"develop",
-		},
 
 		OAuth: work.OAuth{
 			Callback: os.Getenv("app_oauth_callback_url"),
 			Scopes:   []string{},
 		},
-		//HttpDebug: true,
+		// HttpDebug: true,
 		Debug: true,
 
 		// server config
@@ -83,8 +78,8 @@ func GetPaymentConfig() *payment.UserConfig {
 		//"sandbox": true,
 
 		// server config
-		//Token:            os.Getenv("token"),
-		//AESKey:           os.Getenv("aes_key"),
+		// Token:            os.Getenv("token"),
+		// AESKey:           os.Getenv("aes_key"),
 
 	}
 }
@@ -97,8 +92,8 @@ func TestInit(t *testing.T) {
 func TestInitWork(t *testing.T) {
 	config := GetWorkConfig()
 	Work, _ = work.NewWork(config)
-
 }
+
 func TestInitPayment(t *testing.T) {
 	config := GetPaymentConfig()
 	Payment, _ = payment.NewPayment(config)
