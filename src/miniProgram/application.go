@@ -127,8 +127,9 @@ type UserConfig struct {
 }
 
 type Http struct {
-	Timeout float64
-	BaseURI string
+	Timeout  float64
+	BaseURI  string
+	ProxyURI string
 }
 
 type Log struct {
@@ -509,8 +510,9 @@ func MapUserConfig(userConfig *UserConfig) (*object.HashMap, error) {
 
 		"response_type": userConfig.ResponseType,
 		"http": &object.HashMap{
-			"timeout":  userConfig.Http.Timeout,
-			"base_uri": baseURI,
+			"timeout":   userConfig.Http.Timeout,
+			"base_uri":  baseURI,
+			"proxy_uri": userConfig.Http.ProxyURI,
 		},
 		"log": &object.HashMap{
 			"driver": userConfig.Log.Driver,
