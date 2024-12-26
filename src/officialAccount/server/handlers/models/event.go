@@ -277,6 +277,7 @@ type EventTemplateCardMenuEvent struct {
 type EventMessageBatchSendJobFinish struct {
 	contract.EventInterface
 	models.CallbackMessageHeader
+	MsgID                string `xml:"MsgID"`
 	Status               string `xml:"Status"`
 	TotalCount           int    `xml:"TotalCount"`
 	FilterCount          int    `xml:"FilterCount"`
