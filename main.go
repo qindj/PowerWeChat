@@ -30,6 +30,9 @@ func GetOfficialConfig() *officialAccount.UserConfig {
 			Level:  "debug",
 			Stdout: false,
 		},
+		Http: officialAccount.Http{
+			ProxyURI: "",
+		},
 
 		// ResponseType: os.Getenv("response_type"),
 		Cache: kernel.NewRedisClient(&kernel.UniversalOptions{
@@ -55,6 +58,10 @@ func GetWorkConfig() *work.UserConfig {
 			File:  "./wechat/info.log",
 			Error: "./wechat/error.log",
 			ENV:   os.Getenv("work.env"),
+		},
+
+		Http: work.Http{
+			ProxyURI: "",
 		},
 
 		OAuth: work.OAuth{
@@ -98,8 +105,9 @@ func GetPaymentConfig() *payment.UserConfig {
 			Error: "./wechat/error.log",
 		},
 		Http: payment.Http{
-			Timeout: 30.0,
-			BaseURI: "https://api.mch.weixin.qq.com",
+			Timeout:  30.0,
+			BaseURI:  "https://api.mch.weixin.qq.com",
+			ProxyURI: "",
 		},
 
 		Cache: kernel.NewRedisClient(&kernel.UniversalOptions{
@@ -135,6 +143,9 @@ func GetMiniProgramConfig() *miniProgram.UserConfig {
 			Password: "",
 			DB:       1,
 		}),
+		Http: miniProgram.Http{
+			ProxyURI: "",
+		},
 		HttpDebug: true,
 		//Debug: true,
 		//"sandbox": true,
@@ -159,6 +170,9 @@ func GetOpenPlatformConfig() *openPlatform.UserConfig {
 			Password: "",
 			DB:       1,
 		}),
+		Http: openPlatform.Http{
+			ProxyURI: "",
+		},
 		// OAuth:        "",
 		// HttpDebug:    "",
 		// Debug:        "",
