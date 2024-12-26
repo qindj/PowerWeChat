@@ -273,3 +273,38 @@ type EventTemplateCardMenuEvent struct {
 	ResponseCode string `xml:"ResponseCode"`
 	AgentID      string `xml:"AgentID"`
 }
+
+type EventMessageBatchSendJobFinish struct {
+	contract.EventInterface
+	models.CallbackMessageHeader
+	Status               string `xml:"Status"`
+	TotalCount           int    `xml:"TotalCount"`
+	FilterCount          int    `xml:"FilterCount"`
+	SentCount            int    `xml:"SentCount"`
+	ErrorCount           int    `xml:"ErrorCount"`
+	CopyrightCheckResult struct {
+		Count      int `xml:"Count"`
+		ResultList struct {
+			Item []struct {
+				ArticleIdx            int    `xml:"ArticleIdx"`
+				UserDeclareState      int    `xml:"UserDeclareState"`
+				AuditState            int    `xml:"AuditState"`
+				OriginalArticleUrl    string `xml:"OriginalArticleUrl"`
+				OriginalArticleType   int    `xml:"OriginalArticleType"`
+				CanReprint            int    `xml:"CanReprint"`
+				NeedReplaceContent    int    `xml:"NeedReplaceContent"`
+				NeedShowReprintSource int    `xml:"NeedShowReprintSource"`
+			} `xml:"item"`
+		} `xml:"ResultList"`
+		CheckState int `xml:"CheckState"`
+	} `xml:"CopyrightCheckResult"`
+	ArticleUrlResult struct {
+		Count      int `xml:"Count"`
+		ResultList struct {
+			Item []struct {
+				ArticleIdx int    `xml:"ArticleIdx"`
+				ArticleUrl string `xml:"ArticleUrl"`
+			} `xml:"item"`
+		} `xml:"ResultList"`
+	} `xml:"ArticleUrlResult"`
+}
