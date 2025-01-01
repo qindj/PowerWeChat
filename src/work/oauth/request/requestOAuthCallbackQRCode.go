@@ -5,4 +5,3 @@ type ParaOAuthCallbackQRCode struct {
 	AppID string `form:"appid" json:"appid" xml:"appid"`
 	State string `form:"state" json:"state" xml:"state"`
 }
-

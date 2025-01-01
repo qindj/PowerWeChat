@@ -1,6 +1,5 @@
 package request
 
-
 type ActionInfo struct {
 	Scene interface{} `json:"scene"`
 }

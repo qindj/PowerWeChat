@@ -38,14 +38,12 @@ func NewAccessToken(app kernel.ApplicationInterface) (*AccessToken, error) {
 
 // Override GetCredentials
 func (accessToken *AccessToken) OverrideGetCredentials() {
-
 	config := accessToken.App.GetContainer().GetConfig()
 
-	//服务商的corpid
+	// 服务商的corpid
 	corpID := (*config)["provider_corpid"].(string)
 	secret := (*config)["provider_secret"].(string)
 	accessToken.GetCredentials = func() *object.StringMap {
-
 		return &object.StringMap{
 			"corpid":          corpID,
 			"provider_secret": secret,

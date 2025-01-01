@@ -8,19 +8,14 @@ type FastReplyList struct {
 	GuideFastReplyList []*FastReply `json:"guide_fast_reply_list"`
 }
 
-
 type AutoReply struct {
 	Content string `json:"content"`
 	MsgType string `json:"msgtype"`
 }
 
-
-
-
 type BlackKeyword struct {
 	Values []string `json:"values"`
 }
-
 
 // ------------------------------------------------------------
 
@@ -30,6 +25,6 @@ type Buyer struct {
 }
 
 type BuyerList struct {
-	GuideAccount string `json:"guide_account"`
+	GuideAccount string  `json:"guide_account"`
 	BuyerList    []Buyer `json:"buyer_list"`
 }

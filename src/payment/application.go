@@ -109,8 +109,9 @@ type OAuth struct {
 	Scopes   []string
 }
 type Http struct {
-	Timeout float64
-	BaseURI string
+	Timeout  float64
+	BaseURI  string
+	ProxyURI string
 }
 
 func NewPayment(config *UserConfig) (*Payment, error) {
@@ -411,8 +412,9 @@ func MapUserConfig(userConfig *UserConfig) (*object.HashMap, error) {
 			"stdout": userConfig.Log.Stdout,
 		},
 		"http": &object.HashMap{
-			"timeout":  timeout,
-			"base_uri": baseURI,
+			"timeout":   timeout,
+			"base_uri":  baseURI,
+			"proxy_uri": userConfig.Http.ProxyURI,
 		},
 		"oauth.callbacks": userConfig.OAuth.Callback,
 		"oauth.scopes":    userConfig.OAuth.Scopes,

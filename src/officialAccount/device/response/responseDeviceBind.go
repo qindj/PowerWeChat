@@ -8,5 +8,3 @@ type BaseResp struct {
 type ResponseDeviceBind struct {
 	BaseResp *BaseResp `json:"base_resp"`
 }
-
-

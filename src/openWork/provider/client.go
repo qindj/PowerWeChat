@@ -36,3 +36,20 @@ func (clt *Client) CorpIDToOpenCorpID(ctx context.Context, corpID string) (strin
 
 	return result.OpenCorpID, err
 }
+
+// GetCustomizedAuthURL 获取带参授权链接
+// https://developer.work.weixin.qq.com/document/path/98744
+func (clt *Client) GetCustomizedAuthURL(ctx context.Context, state string, templateIDList []string) (string, error) {
+	var result struct {
+		response.ResponseWork
+		QRCodeURL string `json:"qrcode_url,omitempty"`
+	}
+	req := object.HashMap{
+		"state":           state,
+		"templateid_list": templateIDList,
+	}
+
+	_, err := clt.BaseClient.HttpPostJson(ctx, "cgi-bin/service/get_customized_auth_url", &req, nil, nil, &result)
+
+	return result.QRCodeURL, err
+}

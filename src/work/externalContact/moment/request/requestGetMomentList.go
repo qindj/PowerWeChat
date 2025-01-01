@@ -7,5 +7,4 @@ type RequestGetMomentList struct {
 	FilterType int    `json:"filter_type"`
 	Cursor     string `json:"cursor"`
 	Limit      int    `json:"limit"`
-
 }
