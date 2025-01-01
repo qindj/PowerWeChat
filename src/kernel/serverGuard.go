@@ -139,9 +139,7 @@ func (serverGuard *ServerGuard) Serve(request *http.Request) (response *http.Res
 
 	response, err = validatedGuard.Resolve(request)
 
-	if response != nil {
-		logger.Info("Server response created:", "content", response.ContentLength)
-	}
+	logger.Info("Server response created:", "content", response.ContentLength)
 
 	return response, err
 }
@@ -436,7 +434,7 @@ func (serverGuard *ServerGuard) ParseMessage(content string, dataType string) (c
 	callback = &models.Callback{}
 
 	if len(content) <= 0 {
-		return callback, nil
+		return nil, errors.New("request body is empty")
 	}
 
 	if dataType == messages.DataTypeXML {
