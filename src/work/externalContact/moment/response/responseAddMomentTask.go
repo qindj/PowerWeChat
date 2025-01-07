@@ -20,5 +20,5 @@ type Result struct {
 
 type ResponseAddMomentTask struct {
 	response.ResponseWork
-	JobId int `json:"jobid"`
+	JobId string `json:"jobid"`
 }
