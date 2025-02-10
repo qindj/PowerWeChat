@@ -3,9 +3,10 @@ package main
 import (
 	"context"
 	"fmt"
-	fmt2 "github.com/ArtisanCloud/PowerLibs/v3/fmt"
 	"os"
 	"strconv"
+
+	fmt2 "github.com/ArtisanCloud/PowerLibs/v3/fmt"
 
 	"github.com/ArtisanCloud/PowerWeChat/v3/src/kernel"
 	"github.com/ArtisanCloud/PowerWeChat/v3/src/kernel/power"
@@ -13,6 +14,7 @@ import (
 	"github.com/ArtisanCloud/PowerWeChat/v3/src/officialAccount"
 	"github.com/ArtisanCloud/PowerWeChat/v3/src/officialAccount/templateMessage/request"
 	"github.com/ArtisanCloud/PowerWeChat/v3/src/openPlatform"
+	"github.com/ArtisanCloud/PowerWeChat/v3/src/openWork"
 	"github.com/ArtisanCloud/PowerWeChat/v3/src/payment"
 	"github.com/ArtisanCloud/PowerWeChat/v3/src/work"
 	"go.opentelemetry.io/otel"
@@ -189,6 +191,28 @@ func GetOpenPlatformConfig() *openPlatform.UserConfig {
 	}
 }
 
+func GetOpenWorkConfig() *openWork.UserConfig {
+	return &openWork.UserConfig{
+		AppID:        "123",
+		Secret:       "321",
+		AuthCode:     "123",
+		AESKey:       "321",
+		ResponseType: os.Getenv("array"),
+
+		Cache: kernel.NewRedisClient(&kernel.UniversalOptions{
+			Addrs:    []string{"127.0.0.1:6379"},
+			Password: "",
+			DB:       1,
+		}),
+
+		// OAuth:        "",
+		// HttpDebug:    "",
+		// Debug:        "",
+		// NotifyURL:    "",
+		// Sandbox:      "",
+	}
+}
+
 func initTracer() {
 	tp := trace.NewTracerProvider()
 	// Set Global Tracer Provider
@@ -260,11 +284,20 @@ func main() {
 	}
 	fmt2.Dump("miniprogram config:", miniProgramApp.GetConfig().All())
 
-	// init miniProgram app
+	// init openplatform app
 	configOpenPlatform := GetOpenPlatformConfig()
 	openPlatform, err := openPlatform.NewOpenPlatform(configOpenPlatform)
 	if err != nil {
 		fmt.Println(err.Error())
 	}
 	fmt2.Dump("openPlatform config:", openPlatform.GetConfig().All())
+
+	// init openwork app
+	configOpenWork := GetOpenWorkConfig()
+	openWork, err := openWork.NewOpenWork(configOpenWork)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	fmt2.Dump("openPlatform config:", openWork.GetConfig().All())
+
 }
