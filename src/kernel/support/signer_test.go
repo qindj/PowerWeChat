@@ -1,9 +1,12 @@
 package support
 
 import (
+	"crypto/hmac"
 	"crypto/rsa"
+	"crypto/sha256"
 	"crypto/x509"
 	"encoding/pem"
+	"errors"
 	"fmt"
 	"github.com/go-playground/assert/v2"
 	"strings"
@@ -102,6 +105,93 @@ func TestSha256WithRsa(t *testing.T) {
 			//if gotSignature != tt.wantSignature {
 			//	t.Errorf("SignSHA256WithRSA() gotSignature = %v, want %v", gotSignature, tt.wantSignature)
 			//}
+		})
+	}
+}
+
+// 辅助函数：比较两个字节切片是否相等
+func compareByteSlices(a, b []byte) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for i, v := range a {
+		if v != b[i] {
+			return false
+		}
+	}
+	return true
+}
+
+// 测试函数
+func TestSignSHA256WithHMac(t *testing.T) {
+	testCases := []struct {
+		name        string
+		sessionKey  []byte
+		input       string
+		expectedErr error
+	}{
+		{
+			name:        "Empty Session Key",
+			sessionKey:  []byte{},
+			input:       "test input",
+			expectedErr: errors.New("session key is empty"),
+		},
+		{
+			name:        "Valid Input",
+			sessionKey:  []byte("secret key"),
+			input:       "test input",
+			expectedErr: nil,
+		},
+		{
+			name:        "Empty Input",
+			sessionKey:  []byte("secret key"),
+			input:       "",
+			expectedErr: nil,
+		},
+		{
+			name:        "Another Valid Input",
+			sessionKey:  []byte("another secret"),
+			input:       "another input string",
+			expectedErr: nil,
+		},
+		{
+			name:        "Input with Special Characters", // 测试特殊字符
+			sessionKey:  []byte("secret key"),
+			input:       "test input!@#$%^&*()_+=-`~[]\\{}|;':\",./<>?",
+			expectedErr: nil,
+		},
+		{
+			name:        "Long Input String", // 测试长字符串
+			sessionKey:  []byte("secret key"),
+			input:       "This is a long input string to test the HMAC-SHA256 function with a larger amount of data. It should still produce the correct signature.",
+			expectedErr: nil,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			// 1. 计算预期结果
+			expectedHmac := hmac.New(sha256.New, tc.sessionKey)
+			expectedHmac.Write([]byte(tc.input))
+			expectedSig := expectedHmac.Sum(nil)
+
+			// 2. 调用 SignSHA256WithHMac 函数
+			sig, err := SignSHA256WithHMac(tc.sessionKey, tc.input)
+
+			// 3. 进行断言
+			if tc.expectedErr != nil {
+				if err == nil {
+					t.Errorf("Expected error: %v, but got nil", tc.expectedErr)
+				} else if err.Error() != tc.expectedErr.Error() {
+					t.Errorf("Expected error message: %q, but got %q", tc.expectedErr.Error(), err.Error())
+				}
+			} else {
+				if err != nil {
+					t.Errorf("Unexpected error: %v", err)
+				} else if !compareByteSlices(sig, expectedSig) {
+					t.Errorf("Signature mismatch. Expected: %x, Got: %x", expectedSig, sig)
+				}
+			}
 		})
 	}
 }

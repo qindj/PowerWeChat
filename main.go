@@ -17,8 +17,6 @@ import (
 	"github.com/ArtisanCloud/PowerWeChat/v3/src/openWork"
 	"github.com/ArtisanCloud/PowerWeChat/v3/src/payment"
 	"github.com/ArtisanCloud/PowerWeChat/v3/src/work"
-	"go.opentelemetry.io/otel"
-	"go.opentelemetry.io/otel/sdk/trace"
 )
 
 func GetOfficialConfig() *officialAccount.UserConfig {
@@ -213,22 +211,8 @@ func GetOpenWorkConfig() *openWork.UserConfig {
 	}
 }
 
-func initTracer() {
-	tp := trace.NewTracerProvider()
-	// Set Global Tracer Provider
-	otel.SetTracerProvider(tp)
-}
-
-func init() {
-	initTracer()
-}
-
 func main() {
 	fmt.Printf("hello Wechat! \n")
-
-	tracer := otel.Tracer("example-tracer")
-	ctx, span := tracer.Start(context.Background(), "test")
-	defer span.End()
 
 	// init officialAccount app
 	configOfficialAccount := GetOfficialConfig()
@@ -236,7 +220,7 @@ func main() {
 	if err != nil {
 		fmt.Println(err.Error())
 	}
-
+	ctx := context.Background()
 	officialAccountApp.TemplateMessage.Send(ctx, &request.RequestTemlateMessage{
 		ToUser:     "",
 		TemplateID: "",
