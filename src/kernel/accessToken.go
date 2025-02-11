@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"sync"
 	"time"
 
 	"github.com/ArtisanCloud/PowerLibs/v3/cache"
@@ -41,6 +42,7 @@ type AccessToken struct {
 	GetCustomToken func(key string, refresh bool) object.HashMap
 
 	GetMiddlewareOfLog func(logger contract2.LoggerInterface) contract3.RequestMiddleware
+	Locker             *sync.Mutex
 }
 
 func NewAccessToken(app ApplicationInterface) (*AccessToken, error) {
@@ -74,6 +76,7 @@ func NewAccessToken(app ApplicationInterface) (*AccessToken, error) {
 		TokenKey:           "access_token",
 		CachePrefix:        "powerwechat.access_token.",
 		InteractsWithCache: NewInteractsWithCache(cacheClient),
+		Locker:             new(sync.Mutex),
 	}
 
 	token.SetCustomToken = nil
@@ -97,6 +100,19 @@ func (accessToken *AccessToken) GetToken(ctx context.Context, refresh bool) (res
 
 	// get token from cache
 	if !refresh && cache.Has(cacheKey) {
+		value, err := cache.Get(cacheKey, nil)
+		if err == nil && value != nil {
+			token := (object.HashMap)(value.(map[string]interface{}))
+			resToken, err = accessToken.getFormatToken(token)
+			return resToken, err
+		}
+	}
+
+	accessToken.Locker.Lock()
+	defer accessToken.Locker.Unlock()
+
+	// 再次检查是否已经获取到了token
+	if cache.Has(cacheKey) {
 		value, err := cache.Get(cacheKey, nil)
 		if err == nil && value != nil {
 			token := (object.HashMap)(value.(map[string]interface{}))
