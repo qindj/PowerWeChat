@@ -7,12 +7,14 @@ import (
 	"strconv"
 
 	fmt2 "github.com/ArtisanCloud/PowerLibs/v3/fmt"
+
 	"github.com/ArtisanCloud/PowerWeChat/v3/src/kernel"
 	"github.com/ArtisanCloud/PowerWeChat/v3/src/kernel/power"
 	"github.com/ArtisanCloud/PowerWeChat/v3/src/miniProgram"
 	"github.com/ArtisanCloud/PowerWeChat/v3/src/officialAccount"
 	"github.com/ArtisanCloud/PowerWeChat/v3/src/officialAccount/templateMessage/request"
 	"github.com/ArtisanCloud/PowerWeChat/v3/src/openPlatform"
+	"github.com/ArtisanCloud/PowerWeChat/v3/src/openWork"
 	"github.com/ArtisanCloud/PowerWeChat/v3/src/payment"
 	"github.com/ArtisanCloud/PowerWeChat/v3/src/work"
 	"go.opentelemetry.io/otel"
@@ -29,6 +31,8 @@ func GetOfficialConfig() *officialAccount.UserConfig {
 		Log: officialAccount.Log{
 			Level:  "debug",
 			Stdout: false,
+			File:   "/Users/michaelhu/wechat/official-account/info.log",
+			Error:  "/Users/michaelhu/wechat/official-account/error.log",
 		},
 		Http: officialAccount.Http{
 			ProxyURI: "",
@@ -40,7 +44,7 @@ func GetOfficialConfig() *officialAccount.UserConfig {
 			Password: "",
 			DB:       1,
 		}),
-		HttpDebug: false,
+		HttpDebug: true,
 		Debug:     false,
 	}
 }
@@ -55,8 +59,10 @@ func GetWorkConfig() *work.UserConfig {
 		ResponseType: os.Getenv("array"),
 		Log: work.Log{
 			Level: "debug",
-			File:  "./wechat/info.log",
-			Error: "./wechat/error.log",
+			//File:  "./wechat/info.log",
+			//Error: "./wechat/error.log",
+			File:  "/Users/michaelhu/wechat/work/info.log",
+			Error: "/Users/michaelhu/wechat/work/error.log",
 			ENV:   os.Getenv("work.env"),
 		},
 
@@ -101,8 +107,10 @@ func GetPaymentConfig() *payment.UserConfig {
 		ResponseType: os.Getenv("array"),
 		Log: payment.Log{
 			Level: "debug",
-			File:  "./wechat/info.log",
-			Error: "./wechat/error.log",
+			//File:  "./wechat/info.log",
+			//Error: "./wechat/error.log",
+			File:  "/Users/michaelhu/wechat/payment/info.log",
+			Error: "/Users/michaelhu/wechat/payment/error.log",
 		},
 		Http: payment.Http{
 			Timeout:  30.0,
@@ -135,8 +143,8 @@ func GetMiniProgramConfig() *miniProgram.UserConfig {
 		ResponseType: os.Getenv("array"),
 		Log: miniProgram.Log{
 			Level: "debug",
-			File:  "./wechat/info.log",
-			Error: "./wechat/error.log",
+			File:  "/Users/michaelhu/wechat/mini-program/info.log",
+			Error: "/Users/michaelhu/wechat/mini-program/error.log",
 		},
 		Cache: kernel.NewRedisClient(&kernel.UniversalOptions{
 			Addrs:    []string{"127.0.0.1:6379"},
@@ -162,8 +170,10 @@ func GetOpenPlatformConfig() *openPlatform.UserConfig {
 		ResponseType: os.Getenv("array"),
 		Log: openPlatform.Log{
 			Level: "debug",
-			File:  "./wechat/info.log",
-			Error: "./wechat/error.log",
+			//File:  "./wechat/info.log",
+			//Error: "./wechat/error.log",
+			File:  "/Users/michaelhu/wechat/platform/info.log",
+			Error: "/Users/michaelhu/wechat/platform/error.log",
 		},
 		Cache: kernel.NewRedisClient(&kernel.UniversalOptions{
 			Addrs:    []string{"127.0.0.1:6379"},
@@ -173,6 +183,28 @@ func GetOpenPlatformConfig() *openPlatform.UserConfig {
 		Http: openPlatform.Http{
 			ProxyURI: "",
 		},
+		// OAuth:        "",
+		// HttpDebug:    "",
+		// Debug:        "",
+		// NotifyURL:    "",
+		// Sandbox:      "",
+	}
+}
+
+func GetOpenWorkConfig() *openWork.UserConfig {
+	return &openWork.UserConfig{
+		AppID:        "123",
+		Secret:       "321",
+		AuthCode:     "123",
+		AESKey:       "321",
+		ResponseType: os.Getenv("array"),
+
+		Cache: kernel.NewRedisClient(&kernel.UniversalOptions{
+			Addrs:    []string{"127.0.0.1:6379"},
+			Password: "",
+			DB:       1,
+		}),
+
 		// OAuth:        "",
 		// HttpDebug:    "",
 		// Debug:        "",
@@ -252,11 +284,20 @@ func main() {
 	}
 	fmt2.Dump("miniprogram config:", miniProgramApp.GetConfig().All())
 
-	// init miniProgram app
+	// init openplatform app
 	configOpenPlatform := GetOpenPlatformConfig()
 	openPlatform, err := openPlatform.NewOpenPlatform(configOpenPlatform)
 	if err != nil {
 		fmt.Println(err.Error())
 	}
 	fmt2.Dump("openPlatform config:", openPlatform.GetConfig().All())
+
+	// init openwork app
+	configOpenWork := GetOpenWorkConfig()
+	openWork, err := openWork.NewOpenWork(configOpenWork)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	fmt2.Dump("openPlatform config:", openWork.GetConfig().All())
+
 }
