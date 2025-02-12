@@ -2,6 +2,7 @@ package auth
 
 import (
 	"context"
+
 	"github.com/ArtisanCloud/PowerLibs/v3/object"
 	"github.com/ArtisanCloud/PowerWeChat/v3/src/kernel"
 	response2 "github.com/ArtisanCloud/PowerWeChat/v3/src/kernel/response"
@@ -57,9 +58,8 @@ func (comp *Client) CheckSession(ctx context.Context, openId string, sessionKey 
 	}
 	params := &object.StringMap{
 		"appid":      config.GetString("app_id", ""),
-		"secret":     config.GetString("secret", ""),
 		"openid":     openId,
-		"signature":  string(sign),
+		"signature":  sign,
 		"sig_method": "hmac_sha256",
 	}
 
@@ -82,9 +82,8 @@ func (comp *Client) ResetUserSessionKey(ctx context.Context, openId string, sess
 	}
 	params := &object.StringMap{
 		"appid":      config.GetString("app_id", ""),
-		"secret":     config.GetString("secret", ""),
 		"openid":     openId,
-		"signature":  string(sign),
+		"signature":  sign,
 		"sig_method": "hmac_sha256",
 	}
 

@@ -9,13 +9,15 @@ import (
 	"crypto/sha256"
 	"crypto/x509"
 	"encoding/base64"
+	"encoding/hex"
 	"encoding/pem"
 	"errors"
 	"fmt"
-	"github.com/ArtisanCloud/PowerLibs/v3/object"
 	"os"
 	"strings"
 	"time"
+
+	"github.com/ArtisanCloud/PowerLibs/v3/object"
 )
 
 // 请求报文签名相关常量
@@ -189,9 +191,9 @@ func SignSHA256WithRSA(source string, privateKey *rsa.PrivateKey) (signature str
 	return base64.StdEncoding.EncodeToString(signatureByte), nil
 }
 
-func SignSHA256WithHMac(sessionKey []byte, input string) ([]byte, error) {
+func SignSHA256WithHMac(sessionKey []byte, input string) (string, error) {
 	if len(sessionKey) == 0 {
-		return nil, errors.New("session key is empty")
+		return "", errors.New("session key is empty")
 	}
 
 	// Create a new HMAC SHA256 object
@@ -200,11 +202,11 @@ func SignSHA256WithHMac(sessionKey []byte, input string) ([]byte, error) {
 	// Write the input string to the HMAC object
 	inputBytes := []byte(input)
 	if _, err := hmac.Write(inputBytes); err != nil {
-		return nil, err
+		return "", err
 	}
 
 	// Get the HMAC signature
 	signature := hmac.Sum(nil)
 
-	return signature, nil
+	return hex.EncodeToString(signature), nil
 }
