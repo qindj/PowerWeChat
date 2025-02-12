@@ -5,12 +5,14 @@ import (
 	"crypto/rsa"
 	"crypto/sha256"
 	"crypto/x509"
+	"encoding/hex"
 	"encoding/pem"
 	"errors"
 	"fmt"
-	"github.com/go-playground/assert/v2"
 	"strings"
 	"testing"
+
+	"github.com/go-playground/assert/v2"
 )
 
 const (
@@ -109,19 +111,6 @@ func TestSha256WithRsa(t *testing.T) {
 	}
 }
 
-// 辅助函数：比较两个字节切片是否相等
-func compareByteSlices(a, b []byte) bool {
-	if len(a) != len(b) {
-		return false
-	}
-	for i, v := range a {
-		if v != b[i] {
-			return false
-		}
-	}
-	return true
-}
-
 // 测试函数
 func TestSignSHA256WithHMac(t *testing.T) {
 	testCases := []struct {
@@ -173,7 +162,7 @@ func TestSignSHA256WithHMac(t *testing.T) {
 			// 1. 计算预期结果
 			expectedHmac := hmac.New(sha256.New, tc.sessionKey)
 			expectedHmac.Write([]byte(tc.input))
-			expectedSig := expectedHmac.Sum(nil)
+			expectedSig := hex.EncodeToString(expectedHmac.Sum(nil))
 
 			// 2. 调用 SignSHA256WithHMac 函数
 			sig, err := SignSHA256WithHMac(tc.sessionKey, tc.input)
@@ -188,7 +177,7 @@ func TestSignSHA256WithHMac(t *testing.T) {
 			} else {
 				if err != nil {
 					t.Errorf("Unexpected error: %v", err)
-				} else if !compareByteSlices(sig, expectedSig) {
+				} else if sig != expectedSig {
 					t.Errorf("Signature mismatch. Expected: %x, Got: %x", expectedSig, sig)
 				}
 			}
