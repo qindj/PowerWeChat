@@ -8,6 +8,7 @@ import (
 	"github.com/ArtisanCloud/PowerWeChat/v3/src/kernel"
 	"github.com/ArtisanCloud/PowerWeChat/v3/src/kernel/providers"
 	"github.com/ArtisanCloud/PowerWeChat/v3/src/miniProgram/auth"
+	"github.com/ArtisanCloud/PowerWeChat/v3/src/miniProgram/b2b"
 	"github.com/ArtisanCloud/PowerWeChat/v3/src/miniProgram/base"
 	"github.com/ArtisanCloud/PowerWeChat/v3/src/miniProgram/customerServiceMessage"
 	"github.com/ArtisanCloud/PowerWeChat/v3/src/miniProgram/dataCube"
@@ -42,6 +43,7 @@ type MiniProgram struct {
 	*kernel.ServiceContainer
 
 	Base           *base.Client
+	B2B            *b2b.Client
 	VirtualPayment *virtualPayment.Client
 	AccessToken    *auth.AccessToken
 	Auth           *auth.Client
@@ -109,9 +111,10 @@ type UserConfig struct {
 	Token             string
 	AESKey            string
 
-	// 小程序虚拟支付新增配置
-	AppKey  string // 现网AppKey
-	OfferID string // OfferID(支付应用ID) 等同于商户号
+	// 小程序虚拟支付 或 b2b 支付
+	AppKey     string // 现网AppKey
+	SandBoxKey string // 沙盒AppKey
+	OfferID    string // OfferID(支付应用ID) 等同于商户号
 
 	ResponseType string
 	Log          Log
@@ -374,6 +377,12 @@ func NewMiniProgram(config *UserConfig, extraInfos ...*kernel.ExtraInfo) (*MiniP
 
 	//-------------- Virtual Pay --------------
 	app.VirtualPayment, err = virtualPayment.RegisterProvider(app)
+	if err != nil {
+		return nil, err
+	}
+
+	//-------------- B2B Pay --------------
+	app.B2B, err = b2b.RegisterProvider(app)
 	if err != nil {
 		return nil, err
 	}

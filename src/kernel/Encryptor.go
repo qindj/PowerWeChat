@@ -12,12 +12,13 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"fmt"
-	"github.com/ArtisanCloud/PowerLibs/v3/object"
-	"github.com/ArtisanCloud/PowerWeChat/v3/src/kernel/support"
 	"math/rand"
 	"sort"
 	"strings"
 	"time"
+
+	"github.com/ArtisanCloud/PowerLibs/v3/object"
+	"github.com/ArtisanCloud/PowerWeChat/v3/src/kernel/support"
 )
 
 // Wechat Docs: https://open.work.weixin.qq.com/api/doc/90000/90138/90307
@@ -249,7 +250,6 @@ func (encryptor *Encryptor) Signature(token, timestamp, nonce, data string) stri
 
 func CalcPaySig(uri, postBody, appkey string) string {
 	needSignMsg := uri + "&" + postBody
-	fmt.Println("need sign str => ", needSignMsg)
 	h := hmac.New(sha256.New, []byte(appkey))
 	h.Write([]byte(needSignMsg))
 	paySig := hex.EncodeToString(h.Sum(nil))
