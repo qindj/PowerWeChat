@@ -84,11 +84,9 @@ func (container *ServiceContainer) GetConfig() *object.HashMap {
 	// init container config
 	basicConfig := container.getBaseConfig()
 
-	mu.Lock()
 	// merge config
 	container.Config = object.ReplaceHashMapRecursive(container.Config, basicConfig, container.DefaultConfig, container.UserConfig)
 	//fmt.Dump(container.Config)
-	mu.Unlock()
 
 	return container.Config
 }
