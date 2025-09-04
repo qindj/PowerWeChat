@@ -2,6 +2,8 @@ package kernel
 
 import (
 	"crypto/md5"
+	"sync"
+
 	"github.com/ArtisanCloud/PowerLibs/v3/object"
 	"github.com/ArtisanCloud/PowerWeChat/v3/src/kernel/power"
 )
@@ -32,6 +34,8 @@ type ServiceContainer struct {
 	DefaultConfig *object.HashMap
 	UserConfig    *object.HashMap
 	Config        *object.HashMap
+
+	Locker *sync.Mutex
 }
 
 func NewServiceContainer(config *object.HashMap, extraInfos ...*ExtraInfo) (*ServiceContainer, error) {
@@ -49,6 +53,7 @@ func NewServiceContainer(config *object.HashMap, extraInfos ...*ExtraInfo) (*Ser
 		ID:         extraInfo.ID,
 		UserConfig: config,
 		Prepends:   object.NewAttribute(prepends),
+		Locker:     new(sync.Mutex),
 	}
 
 	return container, nil
@@ -76,12 +81,17 @@ func (container *ServiceContainer) getBaseConfig() *object.HashMap {
 }
 
 func (container *ServiceContainer) GetConfig() *object.HashMap {
-
+	if container.Locker == nil {
+		container.Locker = new(sync.Mutex)
+	}
+	container.Locker.Lock()
+	defer container.Locker.Unlock()
 	// init container config
 	basicConfig := container.getBaseConfig()
 
 	// merge config
 	container.Config = object.ReplaceHashMapRecursive(container.Config, basicConfig, container.DefaultConfig, container.UserConfig)
 	//fmt.Dump(container.Config)
+
 	return container.Config
 }

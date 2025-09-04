@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"net/http"
+	"sync"
 
 	"github.com/ArtisanCloud/PowerLibs/v3/cache"
 	"github.com/ArtisanCloud/PowerLibs/v3/logger"
@@ -40,6 +41,8 @@ type OpenPlatform struct {
 	Config *kernel.Config
 
 	Logger *logger.Logger
+
+	Locker *sync.Mutex
 }
 
 type UserConfig struct {
@@ -103,6 +106,7 @@ func NewOpenPlatform(config *UserConfig) (*OpenPlatform, error) {
 				"base_uri": "https://api.weixin.qq.com/",
 			},
 		},
+		Locker: new(sync.Mutex),
 	}
 
 	// init app
@@ -310,6 +314,12 @@ func (app *OpenPlatform) MiniProgram(appID string, refreshToken string, accessTo
 }
 
 func (app *OpenPlatform) GetOfficialAuthorizerConfig(appID string, refreshToken string) (userConfig *officialAccount2.UserConfig, err error) {
+	if app.Locker == nil {
+		app.Locker = new(sync.Mutex)
+	}
+
+	app.Locker.Lock()
+	defer app.Locker.Unlock()
 
 	// 先从缓存中获取token，需要在之前的授权流程中，通过ComponentVerifyTicket生成的token。
 	token, _ := app.AccessToken.GetToken(context.Background(), false)
