@@ -4,10 +4,12 @@ package auth
 
 import (
 	"context"
+	"net/http"
+	"sync"
+
 	"github.com/ArtisanCloud/PowerLibs/v3/object"
 	"github.com/ArtisanCloud/PowerWeChat/v3/src/kernel"
 	"github.com/ArtisanCloud/PowerWeChat/v3/src/openPlatform/auth"
-	"net/http"
 )
 
 type AccessToken struct {
@@ -15,6 +17,8 @@ type AccessToken struct {
 
 	// PowerWechat\OpenPlatform\Application
 	Component kernel.ApplicationInterface
+
+	Locker *sync.Mutex
 }
 
 // https://developers.weixin.qq.com/doc/offiaccount/Basic_Information/Get_access_token.html
@@ -30,6 +34,7 @@ func NewAccessToken(app kernel.ApplicationInterface, component kernel.Applicatio
 	}
 	token := &AccessToken{
 		AccessToken: kernelToken,
+		Locker:      new(sync.Mutex),
 	}
 
 	token.Component = component
@@ -41,21 +46,33 @@ func NewAccessToken(app kernel.ApplicationInterface, component kernel.Applicatio
 	return token, nil
 }
 
+func cloneMapPtr(src *object.HashMap) object.HashMap {
+	dst := make(object.HashMap, len(*src))
+	for k, v := range *src {
+		dst[k] = v
+	}
+	return dst
+}
+
 // Override GetCredentials
 func (accessToken *AccessToken) OverrideGetCredentials() {
 
 	accessToken.GetCredentials = func() *object.StringMap {
+		accessToken.Locker.Lock()
+		c := (accessToken.App).GetContainer().GetConfig()
+		config := cloneMapPtr(c)
+		cc := accessToken.Component.GetContainer().GetConfig()
+		componentConfig := cloneMapPtr(cc)
+		accessToken.Locker.Unlock()
 
-		config := (accessToken.App).GetContainer().GetConfig()
-		componentConfig := accessToken.Component.GetContainer().GetConfig()
 		return &object.StringMap{
-			"component_appid":          (*componentConfig)["app_id"].(string),
-			"authorizer_appid":         (*config)["app_id"].(string),
-			"authorizer_refresh_token": (*config)["refresh_token"].(string),
+			"component_appid":          componentConfig["app_id"].(string),
+			"authorizer_appid":         config["app_id"].(string),
+			"authorizer_refresh_token": config["refresh_token"].(string),
 
-			"appid":      (*componentConfig)["app_id"].(string),
-			"secret":     (*config)["refresh_token"].(string),
-			"neededText": (*config)["app_id"].(string),
+			"appid":      componentConfig["app_id"].(string),
+			"secret":     config["refresh_token"].(string),
+			"neededText": config["app_id"].(string),
 		}
 	}
 }
