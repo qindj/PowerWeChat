@@ -59,20 +59,20 @@ func (accessToken *AccessToken) OverrideGetCredentials() {
 
 	accessToken.GetCredentials = func() *object.StringMap {
 		accessToken.Locker.Lock()
-		c := (accessToken.App).GetContainer().GetConfig()
-		config := cloneMapPtr(c)
-		cc := accessToken.Component.GetContainer().GetConfig()
-		componentConfig := cloneMapPtr(cc)
-		accessToken.Locker.Unlock()
+		config := (accessToken.App).GetContainer().GetConfig()
+		// config := cloneMapPtr(c)
+		componentConfig := accessToken.Component.GetContainer().GetConfig()
+		// componentConfig := cloneMapPtr(cc)
+		defer accessToken.Locker.Unlock()
 
 		return &object.StringMap{
-			"component_appid":          componentConfig["app_id"].(string),
-			"authorizer_appid":         config["app_id"].(string),
-			"authorizer_refresh_token": config["refresh_token"].(string),
+			"component_appid":          (*componentConfig)["app_id"].(string),
+			"authorizer_appid":         (*config)["app_id"].(string),
+			"authorizer_refresh_token": (*config)["refresh_token"].(string),
 
-			"appid":      componentConfig["app_id"].(string),
-			"secret":     config["refresh_token"].(string),
-			"neededText": config["app_id"].(string),
+			"appid":      (*componentConfig)["app_id"].(string),
+			"secret":     (*config)["refresh_token"].(string),
+			"neededText": (*config)["app_id"].(string),
 		}
 	}
 }
