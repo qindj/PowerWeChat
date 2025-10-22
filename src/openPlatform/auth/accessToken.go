@@ -3,13 +3,16 @@ package auth
 // #reference: https://open.work.weixin.qq.com/api/doc/90000/90135/91039
 
 import (
+	"net/http"
+	"sync"
+
 	"github.com/ArtisanCloud/PowerLibs/v3/object"
 	"github.com/ArtisanCloud/PowerWeChat/v3/src/kernel"
-	"net/http"
 )
 
 type AccessToken struct {
 	*kernel.AccessToken
+	Locker *sync.Mutex
 }
 
 // https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/ThirdParty/token/component_access_token.html
@@ -24,7 +27,8 @@ func NewAccessToken(app kernel.ApplicationInterface) (*AccessToken, error) {
 		return nil, err
 	}
 	token := &AccessToken{
-		kernelToken,
+		AccessToken: kernelToken,
+		Locker:      new(sync.Mutex),
 	}
 
 	// Override fields and functions
@@ -37,10 +41,11 @@ func NewAccessToken(app kernel.ApplicationInterface) (*AccessToken, error) {
 func (accessToken *AccessToken) OverrideGetCredentials() {
 
 	accessToken.GetCredentials = func() *object.StringMap {
+		accessToken.Locker.Lock()
 		config := (accessToken.App).GetContainer().GetConfig()
 		verifyTicket := (accessToken.App).GetComponent("VerifyTicket").(*VerifyTicket)
 		ticket, _ := verifyTicket.GetTicket()
-
+		defer accessToken.Locker.Unlock()
 		return &object.StringMap{
 			"component_appid":         (*config)["app_id"].(string),
 			"component_appsecret":     (*config)["secret"].(string),
