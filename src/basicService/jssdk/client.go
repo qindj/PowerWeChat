@@ -56,7 +56,8 @@ func (comp *Client) BuildConfig(ctx context.Context, jsApiList []string, debug b
 
 	signature, err := comp.ConfigSignature(ctx, url, "", 0)
 	if err != nil {
-		return signature, err
+		sign, _ := power.HashMapToPower(signature)
+		return sign, err
 	}
 	config := object.MergeHashMap(&object.HashMap{
 		"debug":       debug,
@@ -70,11 +71,11 @@ func (comp *Client) BuildConfig(ctx context.Context, jsApiList []string, debug b
 
 }
 
-func (comp *Client) GetConfigArray(ctx context.Context, apis []string, debug bool, beta bool, openTagList []string, url string) (string, error) {
+func (comp *Client) GetConfigArray(ctx context.Context, apis []string, debug bool, beta bool, openTagList []string, url string) (*power.HashMap, error) {
 
 	result, err := comp.BuildConfig(ctx, apis, debug, beta, openTagList, url)
 
-	return result.(string), err
+	return result.(*power.HashMap), err
 }
 
 func (comp *Client) GetTicket(ctx context.Context, refresh bool, ticketType string) (*object.HashMap, error) {
